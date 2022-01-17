@@ -1,11 +1,6 @@
 {
-  "include": [
-    "src"
-  ],
-  "exclude": [
-    "dist",
-    "build"
-  ],
+  "include": ["src"],
+  "exclude": ["dist", "build"],
   "compilerOptions": {
     "target": "ES2015",
     "moduleResolution": "node",

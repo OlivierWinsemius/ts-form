@@ -25,15 +25,15 @@ export class Form<V extends FormValues> {
     this.initialValues = { ...values };
     this.values = { ...values };
     this.onSubmit = onSubmit;
-    this.validators = objectFromKeys(values, key => {
-      const validator = new ActionableFieldValidator(this, key)
+    this.validators = objectFromKeys(values, (key) => {
+      const validator = new ActionableFieldValidator(this, key);
       validators?.[key]?.(validator);
-      return validator
+      return validator;
     });
   }
 
   get isValid() {
-    return Object.values(this.validators).every(v => v.errors.length === 0)
+    return Object.values(this.validators).every((v) => v.isValid);
   }
 
   reset = () => {
@@ -46,7 +46,7 @@ export class Form<V extends FormValues> {
   };
 
   getFieldErrors = <F extends keyof V>(field: F) => {
-    return this.validators[field].errors
+    return this.validators[field].errors;
   };
 
   getFieldIsTouched = <F extends keyof V>(field: F) => {
@@ -56,23 +56,24 @@ export class Form<V extends FormValues> {
   setFieldValue = async <F extends keyof V>(field: F, value: V[F]) => {
     this.values[field] = value;
     this.touchedFields[field] = true;
-    await this.validators[field].validate()
+    await this.validators[field].validate();
   };
 
   getField = <F extends keyof V>(field: F) => {
-    const { getFieldIsTouched, getFieldErrors, getFieldValue, setFieldValue } = this;
+    const { getFieldIsTouched, getFieldErrors, getFieldValue, setFieldValue } =
+      this;
     return {
       get errors() {
-        return getFieldErrors(field)
+        return getFieldErrors(field);
       },
       get isValid() {
-        return getFieldErrors(field).length === 0
+        return getFieldErrors(field).length === 0;
       },
       get isTouched() {
         return getFieldIsTouched(field);
       },
       get value() {
-        return getFieldValue(field)
+        return getFieldValue(field);
       },
       setValue(value: V[F]) {
         return setFieldValue(field, value);
@@ -81,12 +82,18 @@ export class Form<V extends FormValues> {
   };
 
   submit = async () => {
-    await Promise.all(Object.values(this.validators).map(validator => validator.validate()));
-    const errorFieldValidators = Object.values(this.validators).filter(v => v.errors.length)
-    const errors = errorFieldValidators.map(v => `${v.fieldName}:\n\t- ${v.errors.join("\n\t- ")}`)
+    await Promise.all(
+      Object.values(this.validators).map((validator) => validator.validate())
+    );
+    const errorFieldValidators = Object.values(this.validators).filter(
+      (v) => v.errors.length
+    );
+    const errors = errorFieldValidators.map(
+      (v) => `${v.fieldName}:\n\t- ${v.errors.join("\n\t- ")}`
+    );
 
     if (errors.length > 0) {
-      throw new FormError(`${errors.join('\n\n')}`)
+      throw new FormError(`${errors.join("\n\n")}`);
     }
 
     return this.onSubmit(this.values);

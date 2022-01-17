@@ -16,7 +16,9 @@ export type FormValidator<V extends FormValues, F extends keyof V> = (
 export type GenericFormValidator = FormValidator<FormValues, keyof FormValues>;
 
 export type FormValidators<V extends FormValues> = {
-  [field in keyof V]?: (validator: FieldValidator<V, field>) => FieldValidator<V, field>
+  [field in keyof V]?: (
+    validator: FieldValidator<V, field>
+  ) => FieldValidator<V, field>;
 };
 
 export type FormSubmit<V extends FormValues> = (

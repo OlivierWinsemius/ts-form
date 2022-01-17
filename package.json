@@ -5,15 +5,18 @@
     "@types/jest": "^27.4.0",
     "@typescript-eslint/eslint-plugin": "^5.9.1",
     "@typescript-eslint/parser": "^5.9.1",
-    "eslint": "^8.6.0",
-    "eslint-plugin-jest": "^25.3.4",
-    "eslint-plugin-unicorn": "^40.1.0",
+    "eslint": "^8.7.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-jest": "^25.7.0",
     "jest": "^27.4.7",
-    "ts-jest": "^27.1.2",
+    "prettier": "^2.5.1",
+    "prettier-eslint": "^13.0.0",
+    "ts-jest": "^27.1.3",
     "typescript": "^4.5.4"
   },
   "scripts": {
     "lint": "eslint src",
+    "format": "prettier --write .",
     "typecheck": "tsc",
     "test": "jest src --collectCoverage"
   }
