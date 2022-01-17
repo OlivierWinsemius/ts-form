@@ -1,14 +1,12 @@
 {
   "include": ["src"],
-  "exclude": ["dist", "build"],
   "compilerOptions": {
+    "module": "commonjs",
     "target": "ES2015",
-    "moduleResolution": "node",
     "outDir": "dist",
     "baseUrl": "src",
     "strict": true,
     "esModuleInterop": true,
-    "declaration": true,
-    "forceConsistentCasingInFileNames": true
+    "declaration": true
   }
 }

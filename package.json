@@ -2,7 +2,11 @@
   "name": "ts-form",
   "description": "typescript-complete basic form implementation",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
+  "files": [
+    "build"
+  ],
   "license": "MIT",
   "repository": {
     "url": "https://github.com/OlivierWinsemius/ts-form.git",
@@ -31,6 +35,7 @@
     "lint": "eslint src",
     "format": "prettier --write .",
     "typecheck": "tsc",
-    "test": "jest src --collectCoverage"
+    "test": "jest src --collectCoverage",
+    "build": "rm -r build && tsc --project tsconfig.build.json"
   }
 }
