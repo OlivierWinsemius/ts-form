@@ -8,7 +8,7 @@ import {
   maxDateValidator,
   minDateValidator,
   oneOf,
-} from "validators";
+} from "../validators";
 
 describe("validators", () => {
   it("booleanValidator", async () => {

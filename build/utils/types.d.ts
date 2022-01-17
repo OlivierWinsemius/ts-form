@@ -1,4 +1,4 @@
-import { FieldValidator } from "field-validator";
+import { FieldValidator } from "../field-validator";
 declare type FormValue<V = unknown> = V;
 export declare type FormValues = Record<string, FormValue>;
 export declare type TouchedFields<V extends FormValues> = {

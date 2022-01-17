@@ -1,5 +1,5 @@
-import { Form } from "form";
-import { FormValidator, FormValues } from "utils/types";
+import { Form } from "./form";
+import { FormValidator, FormValues } from "./utils/types";
 export declare class FieldValidator<V extends FormValues, F extends keyof V> {
     protected allowUndefined: boolean;
     protected allowNull: boolean;

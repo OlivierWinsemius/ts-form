@@ -1,4 +1,4 @@
-import { FormValues, FormSubmit, FormValidators } from "utils/types";
+import { FormValues, FormSubmit, FormValidators } from "./utils/types";
 interface Properties<V extends FormValues> {
     values: V;
     onSubmit: FormSubmit<V>;

@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ActionableFieldValidator = exports.FieldValidator = void 0;
-const validators_1 = require("validators");
+const validators_1 = require("./validators");
 class FieldValidator {
     constructor() {
         this.allowUndefined = false;

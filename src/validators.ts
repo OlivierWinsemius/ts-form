@@ -1,4 +1,4 @@
-import { GenericFormValidator } from "utils/types";
+import { GenericFormValidator } from "./utils/types";
 
 type PrimitiveType = "string" | "number" | "boolean";
 

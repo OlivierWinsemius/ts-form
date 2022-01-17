@@ -3,10 +3,10 @@ import {
   FormSubmit,
   FormValidators,
   TouchedFields,
-} from "utils/types";
-import { FormError } from "form-error";
-import { ActionableFieldValidator } from "field-validator";
-import { objectFromKeys } from "utils/object-from-keys";
+} from "./utils/types";
+import { FormError } from "./form-error";
+import { ActionableFieldValidator } from "./field-validator";
+import { objectFromKeys } from "./utils/object-from-keys";
 
 interface Properties<V extends FormValues> {
   values: V;

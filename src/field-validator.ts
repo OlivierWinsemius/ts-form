@@ -1,5 +1,5 @@
-import { Form } from "form";
-import { FormValidator, FormValues, GenericFormValidator } from "utils/types";
+import { Form } from "./form";
+import { FormValidator, FormValues, GenericFormValidator } from "./utils/types";
 import {
   booleanValidator,
   dateValidator,
@@ -10,7 +10,7 @@ import {
   numberValidator,
   oneOf,
   stringValidator,
-} from "validators";
+} from "./validators";
 
 export class FieldValidator<V extends FormValues, F extends keyof V> {
   protected allowUndefined = false;

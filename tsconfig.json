@@ -4,7 +4,6 @@
     "module": "commonjs",
     "target": "ES2015",
     "outDir": "dist",
-    "baseUrl": "src",
     "strict": true,
     "esModuleInterop": true,
     "declaration": true

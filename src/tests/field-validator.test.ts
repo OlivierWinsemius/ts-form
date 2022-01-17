@@ -1,6 +1,6 @@
-import { ActionableFieldValidator, FieldValidator } from "field-validator";
-import { Form } from "form";
-import { FormValues } from "utils/types";
+import { ActionableFieldValidator, FieldValidator } from "../field-validator";
+import { Form } from "../form";
+import { FormValues } from "../utils/types";
 
 describe("FieldValidator", () => {
   const onSubmit = jest.fn();

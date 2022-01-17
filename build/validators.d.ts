@@ -1,4 +1,4 @@
-import { GenericFormValidator } from "utils/types";
+import { GenericFormValidator } from "./utils/types";
 export declare const stringValidator: GenericFormValidator;
 export declare const numberValidator: GenericFormValidator;
 export declare const booleanValidator: GenericFormValidator;
