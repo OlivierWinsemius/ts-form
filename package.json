@@ -3,10 +3,8 @@
   "license": "MIT",
   "devDependencies": {
     "@types/jest": "^27.4.0",
-    "@types/node": "^17.0.8",
     "@typescript-eslint/eslint-plugin": "^5.9.1",
     "@typescript-eslint/parser": "^5.9.1",
-    "esbuild": "^0.14.11",
     "eslint": "^8.6.0",
     "eslint-plugin-jest": "^25.3.4",
     "jest": "^27.4.7",
@@ -16,9 +14,6 @@
   "scripts": {
     "lint": "eslint src",
     "typecheck": "tsc",
-    "test": "jest src --collectCoverage",
-    "build": "node build",
-    "dev": "yarn build --dev",
-    "watch": "yarn dev --watch"
+    "test": "jest src --collectCoverage"
   }
 }
