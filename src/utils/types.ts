@@ -1,28 +1,22 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+import { FieldValidator } from "fieldValidator";
 
-type FormValue<V = any> = V;
+type FormValue<V = unknown> = V;
 
 export type FormValues = Record<string, FormValue>;
-
-export class FieldError extends Error {
-  name = "FieldError";
-}
-
-export type FieldErrors<V extends FormValues> = {
-  [field in keyof V]?: FieldError[];
-};
 
 export type TouchedFields<V extends FormValues> = {
   [field in keyof V]?: boolean;
 };
 
-type FormValidator<V extends FormValues, F extends keyof V> = (
-  value: V[F],
+export type FormValidator<V extends FormValues, F extends keyof V> = (
+  fieldValue: V[F],
   values: V
-) => Promise<FieldError | undefined> | FieldError | undefined;
+) => Promise<string | undefined> | string | undefined;
+
+export type GenericFormValidator = FormValidator<FormValues, keyof FormValues>;
 
 export type FormValidators<V extends FormValues> = {
-  [field in keyof V]?: FormValidator<V, field>[];
+  [field in keyof V]?: (validator: FieldValidator<V, field>) => FieldValidator<V, field>
 };
 
 export type FormSubmit<V extends FormValues> = (

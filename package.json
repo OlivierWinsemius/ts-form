@@ -16,7 +16,7 @@
   "scripts": {
     "lint": "eslint src",
     "typecheck": "tsc",
-    "test": "jest src",
+    "test": "jest src --collectCoverage",
     "build": "node build",
     "dev": "yarn build --dev",
     "watch": "yarn dev --watch"
