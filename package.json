@@ -1,6 +1,19 @@
 {
-  "name": "former",
+  "name": "ts-form",
+  "description": "typescript-complete basic form implementation",
+  "version": "1.0.0",
+  "main": "index.js",
   "license": "MIT",
+  "repository": {
+    "url": "https://github.com/OlivierWinsemius/ts-form.git",
+    "type": "git"
+  },
+  "author": "Olivier Winsemius <mail@olivierwinsemius.com>",
+  "keywords": [
+    "typescript",
+    "form",
+    "simple"
+  ],
   "devDependencies": {
     "@types/jest": "^27.4.0",
     "@typescript-eslint/eslint-plugin": "^5.9.1",
