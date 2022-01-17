@@ -25,7 +25,7 @@ describe("form", () => {
       const form = new Form({
         values,
         onSubmit,
-        validators: { fieldName: (v)=> v.number() }
+        validators: { fieldName: (v)=> v.number() },
       });
 
       await expect(form.submit()).resolves.toBeUndefined()
@@ -38,7 +38,7 @@ describe("form", () => {
       const form = new Form({
         values,
         onSubmit,
-        validators: { fieldName: (v) => v.string() }
+        validators: { fieldName: (v) => v.string() },
       });
   
       await expect(form.submit()).rejects.toThrowError("fieldName:\n\t- invalid_type_string");

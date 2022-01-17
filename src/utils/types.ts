@@ -1,4 +1,4 @@
-import { FieldValidator } from "fieldValidator";
+import { FieldValidator } from "field-validator";
 
 type FormValue<V = unknown> = V;
 

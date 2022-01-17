@@ -1,9 +1,7 @@
 export class FormError extends Error {
   name = "FormError";
 
-  constructor(
-    message: string,
-  ) {
+  constructor(message: string,) {
     super(message);
   }
 }

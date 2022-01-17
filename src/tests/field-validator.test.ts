@@ -1,4 +1,4 @@
-import { ActionableFieldValidator, FieldValidator } from "fieldValidator"
+import { ActionableFieldValidator, FieldValidator } from "field-validator"
 import { Form } from "form";
 import { FormValues } from "utils/types";
 
@@ -11,6 +11,7 @@ describe("FieldValidator", () => {
       [5, v => v.maxNumber(10), []],
 
       [undefined, v => v.string().maybe(), []],
+      // eslint-disable-next-line unicorn/no-null
       [null, v => v.number().nullable(), []],
 
       [5, v => v.string(), ['invalid_type_string']],

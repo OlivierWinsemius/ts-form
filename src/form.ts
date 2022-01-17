@@ -4,11 +4,11 @@ import {
   FormValidators,
   TouchedFields,
 } from "utils/types";
-import { FormError } from "formError.ts";
-import { ActionableFieldValidator } from "fieldValidator";
-import { objectFromKeys } from "utils/objectFromKeys";
+import { FormError } from "form-error";
+import { ActionableFieldValidator } from "field-validator";
+import { objectFromKeys } from "utils/object-from-keys";
 
-interface Props<V extends FormValues> {
+interface Properties<V extends FormValues> {
   values: V;
   onSubmit: FormSubmit<V>;
   validators?: FormValidators<V>;
@@ -21,7 +21,7 @@ export class Form<V extends FormValues> {
   private onSubmit: FormSubmit<V>;
   values: V;
 
-  constructor({ values, onSubmit, validators }: Props<V>) {
+  constructor({ values, onSubmit, validators }: Properties<V>) {
     this.initialValues = { ...values };
     this.values = { ...values };
     this.onSubmit = onSubmit;
@@ -66,7 +66,7 @@ export class Form<V extends FormValues> {
         return getFieldErrors(field)
       },
       get isValid() {
-        return !getFieldErrors(field).length
+        return getFieldErrors(field).length === 0
       },
       get isTouched() {
         return getFieldIsTouched(field);
@@ -74,8 +74,8 @@ export class Form<V extends FormValues> {
       get value() {
         return getFieldValue(field)
       },
-      setValue(newValue: V[F]) {
-        return setFieldValue(field, newValue);
+      setValue(value: V[F]) {
+        return setFieldValue(field, value);
       },
     };
   };
@@ -85,7 +85,7 @@ export class Form<V extends FormValues> {
     const errorFieldValidators = Object.values(this.validators).filter(v => v.errors.length)
     const errors = errorFieldValidators.map(v => `${v.fieldName}:\n\t- ${v.errors.join("\n\t- ")}`)
 
-    if (errors.length) {
+    if (errors.length > 0) {
       throw new FormError(`${errors.join('\n\n')}`)
     }
 
