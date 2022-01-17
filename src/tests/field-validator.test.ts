@@ -12,6 +12,11 @@ describe("FieldValidator", () => {
     ) => FieldValidator<V, keyof V>,
     string[]
   ];
+
+  const date2000 = new Date("2000-01-01");
+  const date2020 = new Date("2020-01-01");
+  const date2040 = new Date("2040-01-01");
+
   const tests: Test[] = [
     [5, (v) => v.number(), []],
     [5, (v) => v.maxNumber(10), []],
@@ -24,24 +29,20 @@ describe("FieldValidator", () => {
     [5, (v) => v.date(), ["invalid_type_date"]],
     [5, (v) => v.boolean(), ["invalid_type_boolean"]],
     [5, (v) => v.custom(() => "custom_error"), ["custom_error"]],
-
     [5, (v) => v.minNumber(10), ["invalid_value_min_number"]],
     [5, (v) => v.minNumber(0), []],
     [5, (v) => v.maxNumber(0), ["invalid_value_max_number"]],
     [5, (v) => v.maxNumber(10), []],
-
+    [date2020, (v) => v.minDate(date2040), ["invalid_value_min_date"]],
+    [date2020, (v) => v.minDate(date2000), []],
+    [date2020, (v) => v.maxDate(date2000), ["invalid_value_max_date"]],
+    [date2020, (v) => v.maxDate(date2040), []],
+    ["test", (v) => v.oneOf(v.string, v.number), []],
     [
-      new Date("2020-01-01"),
-      (v) => v.minDate(new Date("2040-01-01")),
-      ["invalid_value_min_date"],
+      false,
+      (v) => v.oneOf(v.string, v.number),
+      ["invalid_type_string / invalid_type_number"],
     ],
-    [new Date("2020-01-01"), (v) => v.minDate(new Date("2000-01-01")), []],
-    [
-      new Date("2020-01-01"),
-      (v) => v.maxDate(new Date("2000-01-01")),
-      ["invalid_value_max_date"],
-    ],
-    [new Date("2020-01-01"), (v) => v.maxDate(new Date("2040-01-01")), []],
   ];
 
   it.each(tests)("%j", async (value, setValidations, result) => {

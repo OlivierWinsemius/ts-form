@@ -1,5 +1,5 @@
 import { Form } from "form";
-import { FormValidator, FormValues } from "utils/types";
+import { FormValidator, FormValues, GenericFormValidator } from "utils/types";
 import {
   booleanValidator,
   dateValidator,
@@ -8,6 +8,7 @@ import {
   minDateValidator,
   minNumberValidator,
   numberValidator,
+  oneOf,
   stringValidator,
 } from "validators";
 
@@ -58,6 +59,17 @@ export class FieldValidator<V extends FormValues, F extends keyof V> {
 
   maxDate = (max: Date) => {
     this.validators.push(maxDateValidator(max));
+    return this;
+  };
+
+  oneOf = (...validators: (() => FieldValidator<V, F>)[]) => {
+    validators.forEach((v) => v());
+
+    const validations = this.validators.splice(
+      -validators.length
+    ) as GenericFormValidator[];
+
+    this.validators.push(oneOf(...validations));
     return this;
   };
 

@@ -50,3 +50,21 @@ export const maxDateValidator =
   (fieldValue, formValues) =>
     dateValidator(fieldValue, formValues) ??
     maxValueValidator(maxValue, "date")(fieldValue, formValues);
+
+export const oneOf =
+  <V extends GenericFormValidator>(...validators: V[]): GenericFormValidator =>
+  async (fieldValue, formValues) => {
+    const messages: string[] = [];
+
+    for (const validator of validators) {
+      const validatorMessage = await validator(fieldValue, formValues);
+
+      if (!validatorMessage) {
+        return;
+      }
+
+      messages.push(validatorMessage);
+    }
+
+    return messages.join(" / ");
+  };

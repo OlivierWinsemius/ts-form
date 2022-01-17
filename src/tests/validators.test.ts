@@ -7,6 +7,7 @@ import {
   dateValidator,
   maxDateValidator,
   minDateValidator,
+  oneOf,
 } from "validators";
 
 describe("validators", () => {
@@ -83,5 +84,15 @@ describe("validators", () => {
     expect(validator(new Date("2040-01-01"), {})).toStrictEqual(
       "invalid_value_max_date"
     );
+  });
+
+  it("oneOf", async () => {
+    const validator = oneOf(numberValidator, stringValidator);
+    const message = "invalid_type_number / invalid_type_string";
+
+    expect(await validator(1, {})).toBeUndefined();
+    expect(await validator("test", {})).toBeUndefined();
+    expect(await validator(true, {})).toStrictEqual(message);
+    expect(await validator(new Date(), {})).toStrictEqual(message);
   });
 });
