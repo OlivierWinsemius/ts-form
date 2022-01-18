@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ActionableFieldValidator = exports.FieldValidator = void 0;
+exports.FormFieldValidator = exports.FieldValidator = void 0;
 const validators_1 = require("./validators");
 class FieldValidator {
     constructor() {
@@ -71,17 +71,15 @@ class FieldValidator {
     }
 }
 exports.FieldValidator = FieldValidator;
-class ActionableFieldValidator extends FieldValidator {
+class FormFieldValidator extends FieldValidator {
     constructor(form, fieldName) {
         super();
-        this.errors = [];
         this.validate = () => __awaiter(this, void 0, void 0, function* () {
-            this.errors = [];
             const { form, fieldName, validators, allowNull, allowUndefined } = this;
             const value = form.getFieldValue(fieldName);
             if ((allowUndefined && value === undefined) ||
                 (allowNull && value === null)) {
-                return;
+                return [];
             }
             const errorValidations = yield Promise.all(validators.map((validate) => validate(value, form.values)));
             const errors = new Set(errorValidations.filter((message) => !!message));
@@ -91,13 +89,10 @@ class ActionableFieldValidator extends FieldValidator {
             if (allowNull && errors.size === 1) {
                 errors.delete("invalid_type_null");
             }
-            this.errors = [...errors];
+            return [...errors];
         });
         this.fieldName = fieldName;
         this.form = form;
     }
-    get isValid() {
-        return this.errors.length === 0;
-    }
 }
-exports.ActionableFieldValidator = ActionableFieldValidator;
+exports.FormFieldValidator = FormFieldValidator;

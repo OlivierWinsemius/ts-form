@@ -1,11 +1,19 @@
-import { FieldValidator } from "./field-validator";
+import { FieldValidator, FormFieldValidator } from "./field-validator";
 
 type FormValue<V = unknown> = V;
 
 export type FormValues = Record<string, FormValue>;
 
+export type Validators<V extends FormValues> = {
+  [field in keyof V]: FormFieldValidator<V, keyof V>;
+};
+
 export type TouchedFields<V extends FormValues> = {
-  [field in keyof V]?: boolean;
+  [field in keyof V]: boolean;
+};
+
+export type FieldErrors<V extends FormValues> = {
+  [field in keyof V]: string[];
 };
 
 export type FormValidator<V extends FormValues, F extends keyof V> = (

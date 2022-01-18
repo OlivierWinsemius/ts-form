@@ -88,13 +88,12 @@ export class FieldValidator<V extends FormValues, F extends keyof V> {
   };
 }
 
-export class ActionableFieldValidator<
+export class FormFieldValidator<
   V extends FormValues,
   F extends keyof V
 > extends FieldValidator<V, F> {
   protected form: Form<V>;
   fieldName: F;
-  errors: string[] = [];
 
   constructor(form: Form<V>, fieldName: F) {
     super();
@@ -102,13 +101,7 @@ export class ActionableFieldValidator<
     this.form = form;
   }
 
-  get isValid() {
-    return this.errors.length === 0;
-  }
-
   validate = async () => {
-    this.errors = [];
-
     const { form, fieldName, validators, allowNull, allowUndefined } = this;
     const value = form.getFieldValue(fieldName);
 
@@ -116,7 +109,7 @@ export class ActionableFieldValidator<
       (allowUndefined && value === undefined) ||
       (allowNull && value === null)
     ) {
-      return;
+      return [];
     }
 
     const errorValidations = await Promise.all(
@@ -135,6 +128,6 @@ export class ActionableFieldValidator<
       errors.delete("invalid_type_null");
     }
 
-    this.errors = [...errors];
+    return [...errors];
   };
 }

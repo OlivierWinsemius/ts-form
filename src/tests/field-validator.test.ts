@@ -1,4 +1,4 @@
-import { ActionableFieldValidator, FieldValidator } from "../field-validator";
+import { FormFieldValidator, FieldValidator } from "../field-validator";
 import { Form } from "../form";
 import { FormValues } from "../types";
 
@@ -80,10 +80,10 @@ describe("FieldValidator", () => {
   it.each(tests)("%j", async (value, setValidations, result) => {
     const form = new Form({ values: { value: value }, onSubmit });
 
-    const fieldValidator = new ActionableFieldValidator(form, "value");
+    const fieldValidator = new FormFieldValidator(form, "value");
     setValidations(fieldValidator);
 
-    await fieldValidator.validate();
-    expect(fieldValidator.errors).toStrictEqual(result);
+    const errors = await fieldValidator.validate();
+    expect(errors).toStrictEqual(result);
   });
 });

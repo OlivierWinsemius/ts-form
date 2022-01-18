@@ -17,11 +17,9 @@ export declare class FieldValidator<V extends FormValues, F extends keyof V> {
     maybe: () => this;
     nullable: () => this;
 }
-export declare class ActionableFieldValidator<V extends FormValues, F extends keyof V> extends FieldValidator<V, F> {
+export declare class FormFieldValidator<V extends FormValues, F extends keyof V> extends FieldValidator<V, F> {
     protected form: Form<V>;
     fieldName: F;
-    errors: string[];
     constructor(form: Form<V>, fieldName: F);
-    get isValid(): boolean;
-    validate: () => Promise<void>;
+    validate: () => Promise<string[]>;
 }

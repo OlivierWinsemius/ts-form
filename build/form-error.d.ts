@@ -1,4 +1,5 @@
-export declare class FormError extends Error {
+import { FieldErrors, FormValues } from "./types";
+export declare class FormError<V extends FormValues> extends Error {
     name: string;
-    constructor(message: string);
+    constructor(fieldErrors: FieldErrors<V>);
 }
