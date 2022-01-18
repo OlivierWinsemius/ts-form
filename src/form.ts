@@ -19,7 +19,7 @@ export class Form<V extends FormValues> {
   private fieldErrors: FieldErrors<V>;
   values: V;
 
-  protected afterValidate = (_: keyof V): void | Promise<void> => {};
+  protected afterValidateField = (_: keyof V): void | Promise<void> => {};
 
   constructor({ values, onSubmit, validators }: FormProperties<V>) {
     this.initialValues = { ...values };
@@ -34,6 +34,8 @@ export class Form<V extends FormValues> {
       validators?.[key]?.(validator);
       return validator;
     });
+
+    this.fieldNames.map(this.validateField);
   }
 
   get isValid() {
@@ -61,13 +63,13 @@ export class Form<V extends FormValues> {
 
   validateField = async <F extends keyof V>(field: F) => {
     this.fieldErrors[field] = await this.validators[field].validate();
+    await this.afterValidateField(field);
   };
 
   setFieldValue = async <F extends keyof V>(field: F, value: V[F]) => {
     this.values[field] = value;
     this.touchedFields[field] = true;
     await this.validateField(field);
-    await this.afterValidate(field);
   };
 
   getField = <F extends keyof V>(field: F) => {

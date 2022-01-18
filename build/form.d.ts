@@ -7,7 +7,7 @@ export declare class Form<V extends FormValues> {
     private touchedFields;
     private fieldErrors;
     values: V;
-    protected afterValidate: (_: keyof V) => void | Promise<void>;
+    protected afterValidateField: (_: keyof V) => void | Promise<void>;
     constructor({ values, onSubmit, validators }: FormProperties<V>);
     get isValid(): boolean;
     reset: () => void;

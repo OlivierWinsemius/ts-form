@@ -15,7 +15,7 @@ const field_validator_1 = require("./field-validator");
 const object_from_keys_1 = require("./object-from-keys");
 class Form {
     constructor({ values, onSubmit, validators }) {
-        this.afterValidate = (_) => { };
+        this.afterValidateField = (_) => { };
         this.reset = () => {
             const { initialValues } = this;
             this.values = Object.assign({}, initialValues);
@@ -33,12 +33,12 @@ class Form {
         };
         this.validateField = (field) => __awaiter(this, void 0, void 0, function* () {
             this.fieldErrors[field] = yield this.validators[field].validate();
+            yield this.afterValidateField(field);
         });
         this.setFieldValue = (field, value) => __awaiter(this, void 0, void 0, function* () {
             this.values[field] = value;
             this.touchedFields[field] = true;
             yield this.validateField(field);
-            yield this.afterValidate(field);
         });
         this.getField = (field) => {
             const { getFieldIsTouched, getFieldErrors, getFieldValue, setFieldValue } = this;
@@ -79,6 +79,7 @@ class Form {
             (_a = validators === null || validators === void 0 ? void 0 : validators[key]) === null || _a === void 0 ? void 0 : _a.call(validators, validator);
             return validator;
         });
+        this.fieldNames.map(this.validateField);
     }
     get isValid() {
         return Object.values(this.fieldErrors).every((v) => v.length === 0);
