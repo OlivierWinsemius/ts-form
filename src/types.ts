@@ -1,3 +1,4 @@
+import { Form } from "./form";
 import { FieldValidator, FormFieldValidator } from "./field-validator";
 
 type FormValue<V = unknown> = V;
@@ -30,7 +31,8 @@ export type FormValidators<V extends FormValues> = {
 };
 
 export type FormSubmit<V extends FormValues> = (
-  values: V
+  values: V,
+  form: Form<V>
 ) => void | Promise<void>;
 
 export interface FormProperties<V extends FormValues> {

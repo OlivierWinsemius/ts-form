@@ -79,7 +79,7 @@ class Form {
                 if (!this.isValid) {
                     throw new form_error_1.FormError(this.fieldErrors);
                 }
-                yield this.onSubmit(this.values);
+                yield this.onSubmit(this.values, this);
             }
             finally {
                 this.isSubmitting = false;

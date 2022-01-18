@@ -122,7 +122,7 @@ export class Form<V extends FormValues> {
         throw new FormError(this.fieldErrors);
       }
 
-      await this.onSubmit(this.values);
+      await this.onSubmit(this.values, this);
     } finally {
       this.isSubmitting = false;
       this.afterSubmit(this);
