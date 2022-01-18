@@ -20,7 +20,7 @@ class Form {
             const { initialValues } = this;
             this.values = Object.assign({}, initialValues);
             this.touchedFields = (0, object_from_keys_1.objectFromKeys)(initialValues, () => false);
-            this.fieldErrors = (0, object_from_keys_1.objectFromKeys)(initialValues, () => []);
+            this.fieldNames.map(this.validateField);
         };
         this.getFieldValue = (field) => {
             return this.values[field];

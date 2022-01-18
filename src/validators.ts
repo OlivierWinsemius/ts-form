@@ -1,5 +1,8 @@
 import { GenericFormValidator } from "./types";
 
+export const truthyValidator: GenericFormValidator = (fieldValue) =>
+  !fieldValue ? "invalid_value_truthy" : undefined;
+
 type PrimitiveType = "string" | "number" | "boolean" | "undefined";
 
 const typeValidator =

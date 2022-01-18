@@ -20,6 +20,10 @@ class FieldValidator {
             this.validators.push(validator);
             return this;
         };
+        this.truthy = () => {
+            this.validators.push(validators_1.truthyValidator);
+            return this;
+        };
         this.string = () => {
             this.validators.push(validators_1.stringValidator);
             return this;

@@ -1,4 +1,5 @@
 import { GenericFormValidator } from "./types";
+export declare const truthyValidator: GenericFormValidator;
 export declare const stringValidator: GenericFormValidator;
 export declare const numberValidator: GenericFormValidator;
 export declare const booleanValidator: GenericFormValidator;

@@ -1,6 +1,7 @@
 import { Form } from "./form";
 import { FormValidator, FormValues, GenericFormValidator } from "./types";
 import {
+  truthyValidator,
   booleanValidator,
   dateValidator,
   maxDateValidator,
@@ -21,6 +22,11 @@ export class FieldValidator<V extends FormValues, F extends keyof V> {
 
   custom = (validator: FormValidator<V, F>) => {
     this.validators.push(validator);
+    return this;
+  };
+
+  truthy = () => {
+    this.validators.push(truthyValidator);
     return this;
   };
 

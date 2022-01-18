@@ -1,4 +1,5 @@
 import {
+  truthyValidator,
   booleanValidator,
   numberValidator,
   stringValidator,
@@ -13,7 +14,23 @@ import {
 } from "../validators";
 
 describe("validators", () => {
-  it("booleanValidator", async () => {
+  it("truthyValidator", () => {
+    const message = "invalid_value_truthy";
+
+    expect(truthyValidator(true, {})).toBeUndefined();
+    expect(truthyValidator("test", {})).toBeUndefined();
+    expect(truthyValidator(1, {})).toBeUndefined();
+    expect(truthyValidator(new Date(), {})).toBeUndefined();
+
+    expect(truthyValidator(false, {})).toStrictEqual(message);
+    expect(truthyValidator("", {})).toStrictEqual(message);
+    expect(truthyValidator(0, {})).toStrictEqual(message);
+    expect(truthyValidator(-0, {})).toStrictEqual(message);
+    expect(truthyValidator(null, {})).toStrictEqual(message);
+    expect(truthyValidator(undefined, {})).toStrictEqual(message);
+  });
+
+  it("booleanValidator", () => {
     const message = "invalid_type_boolean";
 
     expect(booleanValidator(true, {})).toBeUndefined();

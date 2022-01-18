@@ -46,7 +46,7 @@ export class Form<V extends FormValues> {
     const { initialValues } = this;
     this.values = { ...initialValues };
     this.touchedFields = objectFromKeys(initialValues, () => false);
-    this.fieldErrors = objectFromKeys(initialValues, () => []);
+    this.fieldNames.map(this.validateField);
   };
 
   getFieldValue = <F extends keyof V>(field: F) => {

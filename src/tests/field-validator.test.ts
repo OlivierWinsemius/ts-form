@@ -18,6 +18,10 @@ describe("FieldValidator", () => {
   const date2040 = new Date("2040-01-01");
 
   const tests: Test[] = [
+    [1, (v) => v.truthy(), []],
+    ["", (v) => v.truthy(), ["invalid_value_truthy"]],
+    [0, (v) => v.truthy(), ["invalid_value_truthy"]],
+
     [5, (v) => v.number(), []],
     ["test", (v) => v.number(), ["invalid_type_number"]],
     [null, (v) => v.number(), ["invalid_type_number"]],
