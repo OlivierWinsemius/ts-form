@@ -1,18 +1,7 @@
-import {
-  FormValues,
-  FormSubmit,
-  FormValidators,
-  TouchedFields,
-} from "./utils/types";
+import { FormValues, FormSubmit, TouchedFields, FormProperties } from "./types";
 import { FormError } from "./form-error";
 import { ActionableFieldValidator } from "./field-validator";
-import { objectFromKeys } from "./utils/object-from-keys";
-
-interface Properties<V extends FormValues> {
-  values: V;
-  onSubmit: FormSubmit<V>;
-  validators?: FormValidators<V>;
-}
+import { objectFromKeys } from "./object-from-keys";
 
 export class Form<V extends FormValues> {
   private initialValues: V;
@@ -21,7 +10,7 @@ export class Form<V extends FormValues> {
   private onSubmit: FormSubmit<V>;
   values: V;
 
-  constructor({ values, onSubmit, validators }: Properties<V>) {
+  constructor({ values, onSubmit, validators }: FormProperties<V>) {
     this.initialValues = { ...values };
     this.values = { ...values };
     this.onSubmit = onSubmit;

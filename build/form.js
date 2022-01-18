@@ -12,7 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Form = void 0;
 const form_error_1 = require("./form-error");
 const field_validator_1 = require("./field-validator");
-const object_from_keys_1 = require("./utils/object-from-keys");
+const object_from_keys_1 = require("./object-from-keys");
 class Form {
     constructor({ values, onSubmit, validators }) {
         this.touchedFields = {};

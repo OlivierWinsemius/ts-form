@@ -60,10 +60,12 @@ class FieldValidator {
         };
         this.maybe = () => {
             this.allowUndefined = true;
+            this.validators.push(validators_1.undefinedValidator);
             return this;
         };
         this.nullable = () => {
             this.allowNull = true;
+            this.validators.push(validators_1.nullValidator);
             return this;
         };
     }
@@ -74,22 +76,22 @@ class ActionableFieldValidator extends FieldValidator {
         super();
         this.errors = [];
         this.validate = () => __awaiter(this, void 0, void 0, function* () {
+            this.errors = [];
             const { form, fieldName, validators, allowNull, allowUndefined } = this;
             const value = form.getFieldValue(fieldName);
-            if (allowUndefined && value === undefined) {
-                this.errors = [];
-                return;
-            }
-            if (allowNull && value === null) {
-                this.errors = [];
+            if ((allowUndefined && value === undefined) ||
+                (allowNull && value === null)) {
                 return;
             }
             const errorValidations = yield Promise.all(validators.map((validate) => validate(value, form.values)));
-            const errors = [
-                ...new Set(errorValidations.filter((message) => !!message)),
-            ];
-            this.errors = errors;
-            return errors;
+            const errors = new Set(errorValidations.filter((message) => !!message));
+            if (allowUndefined && errors.size === 1) {
+                errors.delete("invalid_type_undefined");
+            }
+            if (allowNull && errors.size === 1) {
+                errors.delete("invalid_type_null");
+            }
+            this.errors = [...errors];
         });
         this.fieldName = fieldName;
         this.form = form;

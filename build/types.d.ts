@@ -1,4 +1,4 @@
-import { FieldValidator } from "../field-validator";
+import { FieldValidator } from "./field-validator";
 declare type FormValue<V = unknown> = V;
 export declare type FormValues = Record<string, FormValue>;
 export declare type TouchedFields<V extends FormValues> = {
@@ -10,4 +10,9 @@ export declare type FormValidators<V extends FormValues> = {
     [field in keyof V]?: (validator: FieldValidator<V, field>) => FieldValidator<V, field>;
 };
 export declare type FormSubmit<V extends FormValues> = (values: V) => void | Promise<void>;
+export interface FormProperties<V extends FormValues> {
+    values: V;
+    onSubmit: FormSubmit<V>;
+    validators?: FormValidators<V>;
+}
 export {};

@@ -1,6 +1,6 @@
 import { ActionableFieldValidator, FieldValidator } from "../field-validator";
 import { Form } from "../form";
-import { FormValues } from "../utils/types";
+import { FormValues } from "../types";
 
 describe("FieldValidator", () => {
   const onSubmit = jest.fn();
@@ -25,11 +25,19 @@ describe("FieldValidator", () => {
 
     [null, (v) => v.number().nullable(), []],
     [5, (v) => v.number().nullable(), []],
-    ["test", (v) => v.number().nullable(), ["invalid_type_number"]],
+    [
+      "test",
+      (v) => v.number().nullable(),
+      ["invalid_type_number", "invalid_type_null"],
+    ],
 
     [undefined, (v) => v.number().maybe(), []],
     [5, (v) => v.number().maybe(), []],
-    ["test", (v) => v.number().maybe(), ["invalid_type_number"]],
+    [
+      "test",
+      (v) => v.number().maybe(),
+      ["invalid_type_number", "invalid_type_undefined"],
+    ],
 
     ["test", (v) => v.string(), []],
     [5, (v) => v.string(), ["invalid_type_string"]],
@@ -56,6 +64,12 @@ describe("FieldValidator", () => {
     [date2020, (v) => v.maxDate(date2000), ["invalid_value_max_date"]],
 
     ["test", (v) => v.oneOf(v.string, v.number), []],
+    ["test", (v) => v.oneOf(v.string, v.nullable), []],
+    [
+      undefined,
+      (v) => v.oneOf(v.string, v.nullable),
+      ["invalid_type_string / invalid_type_null"],
+    ],
     [
       false,
       (v) => v.oneOf(v.string, v.number),

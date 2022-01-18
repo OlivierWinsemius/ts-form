@@ -1,16 +1,11 @@
-import { FormValues, FormSubmit, FormValidators } from "./utils/types";
-interface Properties<V extends FormValues> {
-    values: V;
-    onSubmit: FormSubmit<V>;
-    validators?: FormValidators<V>;
-}
+import { FormValues, FormProperties } from "./types";
 export declare class Form<V extends FormValues> {
     private initialValues;
     private validators;
     private touchedFields;
     private onSubmit;
     values: V;
-    constructor({ values, onSubmit, validators }: Properties<V>);
+    constructor({ values, onSubmit, validators }: FormProperties<V>);
     get isValid(): boolean;
     reset: () => void;
     getFieldValue: <F extends keyof V>(field: F) => V[F];
@@ -26,4 +21,3 @@ export declare class Form<V extends FormValues> {
     };
     submit: () => Promise<void>;
 }
-export {};

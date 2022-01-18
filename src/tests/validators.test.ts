@@ -2,6 +2,8 @@ import {
   booleanValidator,
   numberValidator,
   stringValidator,
+  undefinedValidator,
+  nullValidator,
   minNumberValidator,
   maxNumberValidator,
   dateValidator,
@@ -12,37 +14,69 @@ import {
 
 describe("validators", () => {
   it("booleanValidator", async () => {
+    const message = "invalid_type_boolean";
+
     expect(booleanValidator(true, {})).toBeUndefined();
-    expect(booleanValidator(1, {})).toStrictEqual("invalid_type_boolean");
-    expect(booleanValidator("test", {})).toStrictEqual("invalid_type_boolean");
-    expect(booleanValidator(new Date(), {})).toStrictEqual(
-      "invalid_type_boolean"
-    );
+    expect(booleanValidator(null, {})).toStrictEqual(message);
+    expect(booleanValidator(undefined, {})).toStrictEqual(message);
+    expect(booleanValidator(1, {})).toStrictEqual(message);
+    expect(booleanValidator("test", {})).toStrictEqual(message);
+    expect(booleanValidator(new Date(), {})).toStrictEqual(message);
   });
 
   it("numberValidator", () => {
+    const message = "invalid_type_number";
+
     expect(numberValidator(1, {})).toBeUndefined();
-    expect(numberValidator(true, {})).toStrictEqual("invalid_type_number");
-    expect(numberValidator("test", {})).toStrictEqual("invalid_type_number");
-    expect(numberValidator(new Date(), {})).toStrictEqual(
-      "invalid_type_number"
-    );
+    expect(numberValidator(null, {})).toStrictEqual(message);
+    expect(numberValidator(undefined, {})).toStrictEqual(message);
+    expect(numberValidator(true, {})).toStrictEqual(message);
+    expect(numberValidator("test", {})).toStrictEqual(message);
+    expect(numberValidator(new Date(), {})).toStrictEqual(message);
   });
 
   it("stringValidator", () => {
+    const message = "invalid_type_string";
+
     expect(stringValidator("test", {})).toBeUndefined();
-    expect(stringValidator(1, {})).toStrictEqual("invalid_type_string");
-    expect(stringValidator(true, {})).toStrictEqual("invalid_type_string");
-    expect(stringValidator(new Date(), {})).toStrictEqual(
-      "invalid_type_string"
-    );
+    expect(stringValidator(null, {})).toStrictEqual(message);
+    expect(stringValidator(undefined, {})).toStrictEqual(message);
+    expect(stringValidator(1, {})).toStrictEqual(message);
+    expect(stringValidator(true, {})).toStrictEqual(message);
+    expect(stringValidator(new Date(), {})).toStrictEqual(message);
+  });
+
+  it("undefinedValidator", () => {
+    const message = "invalid_type_undefined";
+
+    expect(undefinedValidator(undefined, {})).toBeUndefined();
+    expect(undefinedValidator(null, {})).toStrictEqual(message);
+    expect(undefinedValidator("test", {})).toStrictEqual(message);
+    expect(undefinedValidator(1, {})).toStrictEqual(message);
+    expect(undefinedValidator(true, {})).toStrictEqual(message);
+    expect(undefinedValidator(new Date(), {})).toStrictEqual(message);
+  });
+
+  it("nullValidator", () => {
+    const message = "invalid_type_null";
+
+    expect(nullValidator(null, {})).toBeUndefined();
+    expect(nullValidator(undefined, {})).toStrictEqual(message);
+    expect(nullValidator("test", {})).toStrictEqual(message);
+    expect(nullValidator(1, {})).toStrictEqual(message);
+    expect(nullValidator(true, {})).toStrictEqual(message);
+    expect(nullValidator(new Date(), {})).toStrictEqual(message);
   });
 
   it("dateValidator", () => {
+    const message = "invalid_type_date";
+
     expect(dateValidator(new Date(), {})).toBeUndefined();
-    expect(dateValidator("test", {})).toStrictEqual("invalid_type_date");
-    expect(dateValidator(1, {})).toStrictEqual("invalid_type_date");
-    expect(dateValidator(true, {})).toStrictEqual("invalid_type_date");
+    expect(dateValidator(null, {})).toStrictEqual(message);
+    expect(dateValidator(undefined, {})).toStrictEqual(message);
+    expect(dateValidator("test", {})).toStrictEqual(message);
+    expect(dateValidator(1, {})).toStrictEqual(message);
+    expect(dateValidator(true, {})).toStrictEqual(message);
   });
 
   it("minNumberValidator", () => {

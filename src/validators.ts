@@ -1,6 +1,6 @@
-import { GenericFormValidator } from "./utils/types";
+import { GenericFormValidator } from "./types";
 
-type PrimitiveType = "string" | "number" | "boolean";
+type PrimitiveType = "string" | "number" | "boolean" | "undefined";
 
 const typeValidator =
   <T extends PrimitiveType>(type: T): GenericFormValidator =>
@@ -12,6 +12,11 @@ export const stringValidator = typeValidator("string");
 export const numberValidator = typeValidator("number");
 
 export const booleanValidator = typeValidator("boolean");
+
+export const undefinedValidator = typeValidator("undefined");
+
+export const nullValidator: GenericFormValidator = (fieldValue) =>
+  fieldValue !== null ? "invalid_type_null" : undefined;
 
 export const dateValidator: GenericFormValidator = (fieldValue) =>
   !(fieldValue instanceof Date) ? "invalid_type_date" : undefined;

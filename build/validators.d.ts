@@ -1,7 +1,9 @@
-import { GenericFormValidator } from "./utils/types";
+import { GenericFormValidator } from "./types";
 export declare const stringValidator: GenericFormValidator;
 export declare const numberValidator: GenericFormValidator;
 export declare const booleanValidator: GenericFormValidator;
+export declare const undefinedValidator: GenericFormValidator;
+export declare const nullValidator: GenericFormValidator;
 export declare const dateValidator: GenericFormValidator;
 export declare const minNumberValidator: (minValue: number) => GenericFormValidator;
 export declare const maxNumberValidator: (maxValue: number) => GenericFormValidator;

@@ -9,11 +9,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.oneOf = exports.maxDateValidator = exports.minDateValidator = exports.maxNumberValidator = exports.minNumberValidator = exports.dateValidator = exports.booleanValidator = exports.numberValidator = exports.stringValidator = void 0;
+exports.oneOf = exports.maxDateValidator = exports.minDateValidator = exports.maxNumberValidator = exports.minNumberValidator = exports.dateValidator = exports.nullValidator = exports.undefinedValidator = exports.booleanValidator = exports.numberValidator = exports.stringValidator = void 0;
 const typeValidator = (type) => (fieldValue) => type !== typeof fieldValue ? `invalid_type_${type}` : undefined;
 exports.stringValidator = typeValidator("string");
 exports.numberValidator = typeValidator("number");
 exports.booleanValidator = typeValidator("boolean");
+exports.undefinedValidator = typeValidator("undefined");
+const nullValidator = (fieldValue) => fieldValue !== null ? "invalid_type_null" : undefined;
+exports.nullValidator = nullValidator;
 const dateValidator = (fieldValue) => !(fieldValue instanceof Date) ? "invalid_type_date" : undefined;
 exports.dateValidator = dateValidator;
 const minValueValidator = (minValue, type) => (fieldValue) => fieldValue < minValue ? `invalid_value_min_${type}` : undefined;

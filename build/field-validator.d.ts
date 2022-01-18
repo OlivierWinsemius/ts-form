@@ -1,5 +1,5 @@
 import { Form } from "./form";
-import { FormValidator, FormValues } from "./utils/types";
+import { FormValidator, FormValues } from "./types";
 export declare class FieldValidator<V extends FormValues, F extends keyof V> {
     protected allowUndefined: boolean;
     protected allowNull: boolean;
@@ -23,5 +23,5 @@ export declare class ActionableFieldValidator<V extends FormValues, F extends ke
     errors: string[];
     constructor(form: Form<V>, fieldName: F);
     get isValid(): boolean;
-    validate: () => Promise<string[] | undefined>;
+    validate: () => Promise<void>;
 }

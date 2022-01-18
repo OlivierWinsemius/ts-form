@@ -1,5 +1,5 @@
 import { Form } from "./form";
-import { FormValidator, FormValues, GenericFormValidator } from "./utils/types";
+import { FormValidator, FormValues, GenericFormValidator } from "./types";
 import {
   booleanValidator,
   dateValidator,
@@ -7,9 +7,11 @@ import {
   maxNumberValidator,
   minDateValidator,
   minNumberValidator,
+  nullValidator,
   numberValidator,
   oneOf,
   stringValidator,
+  undefinedValidator,
 } from "./validators";
 
 export class FieldValidator<V extends FormValues, F extends keyof V> {
@@ -75,11 +77,13 @@ export class FieldValidator<V extends FormValues, F extends keyof V> {
 
   maybe = () => {
     this.allowUndefined = true;
+    this.validators.push(undefinedValidator);
     return this;
   };
 
   nullable = () => {
     this.allowNull = true;
+    this.validators.push(nullValidator);
     return this;
   };
 }
@@ -103,16 +107,15 @@ export class ActionableFieldValidator<
   }
 
   validate = async () => {
+    this.errors = [];
+
     const { form, fieldName, validators, allowNull, allowUndefined } = this;
     const value = form.getFieldValue(fieldName);
 
-    if (allowUndefined && value === undefined) {
-      this.errors = [];
-      return;
-    }
-
-    if (allowNull && value === null) {
-      this.errors = [];
+    if (
+      (allowUndefined && value === undefined) ||
+      (allowNull && value === null)
+    ) {
       return;
     }
 
@@ -120,14 +123,18 @@ export class ActionableFieldValidator<
       validators.map((validate) => validate(value, form.values))
     );
 
-    const errors = [
-      ...new Set(
-        errorValidations.filter((message): message is string => !!message)
-      ),
-    ];
+    const errors = new Set(
+      errorValidations.filter((message): message is string => !!message)
+    );
 
-    this.errors = errors;
+    if (allowUndefined && errors.size === 1) {
+      errors.delete("invalid_type_undefined");
+    }
 
-    return errors;
+    if (allowNull && errors.size === 1) {
+      errors.delete("invalid_type_null");
+    }
+
+    this.errors = [...errors];
   };
 }
