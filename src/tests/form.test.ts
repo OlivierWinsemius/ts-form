@@ -1,7 +1,7 @@
 import { Form } from "../form";
 
 describe("form", () => {
-  it("reset", () => {
+  it("reset", async () => {
     const onSubmit = jest.fn();
     const values = { fieldName: 1 };
     const form = new Form({ values, onSubmit });
@@ -9,7 +9,7 @@ describe("form", () => {
 
     expect(formField.value).toStrictEqual(values.fieldName);
 
-    formField.setValue(2);
+    await formField.setValue(2);
     expect(formField.isTouched).toStrictEqual(true);
     expect(formField.value).not.toStrictEqual(values.fieldName);
     form.reset();

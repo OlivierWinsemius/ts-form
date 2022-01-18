@@ -107,7 +107,7 @@ export class FormFieldValidator<
     this.form = form;
   }
 
-  validate = async () => {
+  validate = async (formValues: V) => {
     const { form, fieldName, validators, allowNull, allowUndefined } = this;
     const value = form.getFieldValue(fieldName);
 
@@ -119,7 +119,7 @@ export class FormFieldValidator<
     }
 
     const errorValidations = await Promise.all(
-      validators.map((validate) => validate(value, form.values))
+      validators.map((validate) => validate(value, formValues))
     );
 
     const errors = new Set(

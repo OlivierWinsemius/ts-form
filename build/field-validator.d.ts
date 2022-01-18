@@ -22,5 +22,5 @@ export declare class FormFieldValidator<V extends FormValues, F extends keyof V>
     protected form: Form<V>;
     fieldName: F;
     constructor(form: Form<V>, fieldName: F);
-    validate: () => Promise<string[]>;
+    validate: (formValues: V) => Promise<string[]>;
 }

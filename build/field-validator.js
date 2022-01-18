@@ -78,14 +78,14 @@ exports.FieldValidator = FieldValidator;
 class FormFieldValidator extends FieldValidator {
     constructor(form, fieldName) {
         super();
-        this.validate = () => __awaiter(this, void 0, void 0, function* () {
+        this.validate = (formValues) => __awaiter(this, void 0, void 0, function* () {
             const { form, fieldName, validators, allowNull, allowUndefined } = this;
             const value = form.getFieldValue(fieldName);
             if ((allowUndefined && value === undefined) ||
                 (allowNull && value === null)) {
                 return [];
             }
-            const errorValidations = yield Promise.all(validators.map((validate) => validate(value, form.values)));
+            const errorValidations = yield Promise.all(validators.map((validate) => validate(value, formValues)));
             const errors = new Set(errorValidations.filter((message) => !!message));
             if (allowUndefined && errors.size === 1) {
                 errors.delete("invalid_type_undefined");
