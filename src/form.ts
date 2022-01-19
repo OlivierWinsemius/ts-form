@@ -12,14 +12,13 @@ import { FormFieldValidator } from "./field-validator";
 import { objectFromKeys } from "./object-from-keys";
 
 export class Form<V extends FormValues> {
-  private fieldNames: (keyof V)[];
-  private values: V;
-  private initialValues: V;
-  private onSubmit: FormSubmit<V>;
-  private validators: FormValidators<V>;
-  private touchedFields: TouchedFields<V>;
-  private formErrors: FormErrors<V>;
-
+  protected fieldNames: (keyof V)[];
+  protected onSubmit: FormSubmit<V>;
+  protected validators: FormValidators<V>;
+  protected touchedFields: TouchedFields<V>;
+  protected formErrors: FormErrors<V>;
+  protected values: V;
+  protected initialValues: V;
   protected afterSubmit: (form: this) => void = () => undefined;
   protected afterValidateForm: (form: this) => void = () => undefined;
   protected afterValidateField: (field: keyof V, form: this) => void = () =>

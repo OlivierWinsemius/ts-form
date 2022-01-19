@@ -1,12 +1,20 @@
-import { FormValues, FormProperties, FormErrors, FormField } from "./types";
+import {
+  FormValues,
+  FormSubmit,
+  TouchedFields,
+  FormProperties,
+  FormErrors,
+  FormValidators,
+  FormField,
+} from "./types";
 export declare class Form<V extends FormValues> {
-  private fieldNames;
-  private values;
-  private initialValues;
-  private onSubmit;
-  private validators;
-  private touchedFields;
-  private formErrors;
+  protected fieldNames: (keyof V)[];
+  protected onSubmit: FormSubmit<V>;
+  protected validators: FormValidators<V>;
+  protected touchedFields: TouchedFields<V>;
+  protected formErrors: FormErrors<V>;
+  protected values: V;
+  protected initialValues: V;
   protected afterSubmit: (form: this) => void;
   protected afterValidateForm: (form: this) => void;
   protected afterValidateField: (field: keyof V, form: this) => void;
