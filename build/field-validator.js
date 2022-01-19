@@ -104,8 +104,8 @@ class FormFieldValidator extends FieldValidator {
     super();
     this.validate = (formValues) =>
       __awaiter(this, void 0, void 0, function* () {
-        const { form, fieldName, validators, allowNull, allowUndefined } = this;
-        const value = form.getFieldValue(fieldName);
+        const { fieldName, validators, allowNull, allowUndefined } = this;
+        const value = formValues[fieldName];
         if (
           (allowUndefined && value === undefined) ||
           (allowNull && value === null)

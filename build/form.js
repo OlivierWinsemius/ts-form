@@ -42,16 +42,6 @@ class Form {
     this.afterSubmit = () => undefined;
     this.afterValidateForm = () => undefined;
     this.afterValidateField = () => undefined;
-    this.isSubmitting = false;
-    this.reset = () => {
-      const { initialValues } = this;
-      this.values = Object.assign({}, initialValues);
-      this.touchedFields = (0, object_from_keys_1.objectFromKeys)(
-        initialValues,
-        () => false
-      );
-      return this.validateAllFields();
-    };
     this.getFieldValue = (field) => {
       return this.values[field];
     };
@@ -83,6 +73,7 @@ class Form {
       this.touchedFields[field] = true;
       return this.validateField(field);
     };
+    this.isSubmitting = false;
     this.getField = (field) => {
       const {
         getFieldIsTouched,
@@ -122,6 +113,15 @@ class Form {
           this.afterSubmit(this);
         }
       });
+    this.reset = () => {
+      const { initialValues } = this;
+      this.values = Object.assign({}, initialValues);
+      this.touchedFields = (0, object_from_keys_1.objectFromKeys)(
+        initialValues,
+        () => false
+      );
+      return this.validateAllFields();
+    };
     this.initialValues = Object.assign({}, values);
     this.values = Object.assign({}, values);
     this.fieldNames = Object.keys(values);

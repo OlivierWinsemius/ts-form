@@ -24,6 +24,41 @@ export class Form<V extends FormValues> {
   protected afterValidateField: (field: keyof V, form: this) => void = () =>
     undefined;
 
+  protected getFieldValue = <F extends keyof V>(field: F) => {
+    return this.values[field];
+  };
+
+  protected getFieldErrors = <F extends keyof V>(field: F) => {
+    return this.formErrors[field];
+  };
+
+  protected getFieldIsTouched = <F extends keyof V>(field: F) => {
+    return !!this.touchedFields[field];
+  };
+
+  protected validateField = async <F extends keyof V>(field: F) => {
+    const { values, validators } = this;
+    this.formErrors[field] = await validators[field].validate(values);
+    this.afterValidateField(field, this);
+  };
+
+  protected validateAllFields = async () => {
+    const { values, validators, fieldNames } = this;
+    const validate = fieldNames.map(async (field) => {
+      this.formErrors[field] = await validators[field].validate(values);
+    });
+
+    await Promise.all(validate);
+
+    this.afterValidateForm(this);
+  };
+
+  protected setFieldValue = <F extends keyof V>(field: F, value: V[F]) => {
+    this.values[field] = value;
+    this.touchedFields[field] = true;
+    return this.validateField(field);
+  };
+
   constructor({ values, onSubmit, validators }: FormProperties<V>) {
     this.initialValues = { ...values };
     this.values = { ...values };
@@ -48,48 +83,6 @@ export class Form<V extends FormValues> {
       (messages) => messages.length === 0
     );
   }
-
-  reset = () => {
-    const { initialValues } = this;
-    this.values = { ...initialValues };
-    this.touchedFields = objectFromKeys(initialValues, () => false);
-    return this.validateAllFields();
-  };
-
-  getFieldValue = <F extends keyof V>(field: F) => {
-    return this.values[field];
-  };
-
-  getFieldErrors = <F extends keyof V>(field: F) => {
-    return this.formErrors[field];
-  };
-
-  getFieldIsTouched = <F extends keyof V>(field: F) => {
-    return !!this.touchedFields[field];
-  };
-
-  validateField = async <F extends keyof V>(field: F) => {
-    const { values, validators } = this;
-    this.formErrors[field] = await validators[field].validate(values);
-    this.afterValidateField(field, this);
-  };
-
-  validateAllFields = async () => {
-    const { values, validators, fieldNames } = this;
-    const validate = fieldNames.map(async (field) => {
-      this.formErrors[field] = await validators[field].validate(values);
-    });
-
-    await Promise.all(validate);
-
-    this.afterValidateForm(this);
-  };
-
-  setFieldValue = <F extends keyof V>(field: F, value: V[F]) => {
-    this.values[field] = value;
-    this.touchedFields[field] = true;
-    return this.validateField(field);
-  };
 
   getField = <F extends keyof V>(field: F): FormField<V, F> => {
     const { getFieldIsTouched, getFieldErrors, getFieldValue, setFieldValue } =
@@ -129,5 +122,12 @@ export class Form<V extends FormValues> {
       this.isSubmitting = false;
       this.afterSubmit(this);
     }
+  };
+
+  reset = () => {
+    const { initialValues } = this;
+    this.values = { ...initialValues };
+    this.touchedFields = objectFromKeys(initialValues, () => false);
+    return this.validateAllFields();
   };
 }

@@ -108,8 +108,8 @@ export class FormFieldValidator<
   }
 
   validate = async (formValues: V) => {
-    const { form, fieldName, validators, allowNull, allowUndefined } = this;
-    const value = form.getFieldValue(fieldName);
+    const { fieldName, validators, allowNull, allowUndefined } = this;
+    const value = formValues[fieldName];
 
     if (
       (allowUndefined && value === undefined) ||
