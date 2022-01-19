@@ -15,7 +15,6 @@ export class Form<V extends FormValues> {
   protected fieldNames: (keyof V)[];
   protected onSubmit: FormSubmit<V>;
   protected validators: FormValidators<V>;
-  protected touchedFields: TouchedFields<V>;
   protected formErrors: FormErrors<V>;
   protected values: V;
   protected initialValues: V;
@@ -33,7 +32,7 @@ export class Form<V extends FormValues> {
   };
 
   protected getFieldIsTouched = <F extends keyof V>(field: F) => {
-    return !!this.touchedFields[field];
+    return this.values[field] !== this.initialValues[field];
   };
 
   protected validateField = async <F extends keyof V>(field: F) => {
@@ -55,7 +54,6 @@ export class Form<V extends FormValues> {
 
   protected setFieldValue = <F extends keyof V>(field: F, value: V[F]) => {
     this.values[field] = value;
-    this.touchedFields[field] = true;
     return this.validateField(field);
   };
 
@@ -65,7 +63,6 @@ export class Form<V extends FormValues> {
     this.fieldNames = Object.keys(values);
     this.onSubmit = onSubmit;
 
-    this.touchedFields = objectFromKeys(values, () => false);
     this.formErrors = objectFromKeys(values, () => []);
     this.validators = objectFromKeys(values, (key) => {
       const validator = new FormFieldValidator(this, key);
@@ -131,7 +128,6 @@ export class Form<V extends FormValues> {
   reset = () => {
     const { initialValues } = this;
     this.values = { ...initialValues };
-    this.touchedFields = objectFromKeys(initialValues, () => false);
     return this.validateAllFields();
   };
 }
