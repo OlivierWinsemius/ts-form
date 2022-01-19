@@ -101,10 +101,12 @@ class Form {
         this.validateAllFields();
     }
     get isTouched() {
-        return this.fieldNames.every((field) => this.getField(field).isTouched);
+        const { fieldNames, getFieldIsTouched } = this;
+        return !!fieldNames.find((field) => getFieldIsTouched(field));
     }
     get isValid() {
-        return this.fieldNames.every((field) => this.getField(field).isValid);
+        const { fieldNames, getFieldErrors } = this;
+        return fieldNames.every((field) => getFieldErrors(field).length === 0);
     }
 }
 exports.Form = Form;
