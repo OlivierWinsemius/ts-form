@@ -1,5 +1,5 @@
 import { Form } from "./form";
-import { FormValidator, FormValues, GenericFormValidator } from "./types";
+import { Validator, FormValues, GenericValidator } from "./types";
 import {
   truthyValidator,
   booleanValidator,
@@ -18,9 +18,9 @@ import {
 export class FieldValidator<V extends FormValues, F extends keyof V> {
   protected allowUndefined = false;
   protected allowNull = false;
-  protected validators: FormValidator<V, F>[] = [];
+  protected validators: Validator<V, F>[] = [];
 
-  custom = (validator: FormValidator<V, F>) => {
+  custom = (validator: Validator<V, F>) => {
     this.validators.push(validator);
     return this;
   };
@@ -75,7 +75,7 @@ export class FieldValidator<V extends FormValues, F extends keyof V> {
 
     const validations = this.validators.splice(
       -validators.length
-    ) as GenericFormValidator[];
+    ) as GenericValidator[];
 
     this.validators.push(oneOf(...validations));
     return this;

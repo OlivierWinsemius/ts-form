@@ -1,13 +1,15 @@
-import { GenericFormValidator } from "./types";
-export declare const truthyValidator: GenericFormValidator;
-export declare const stringValidator: GenericFormValidator;
-export declare const numberValidator: GenericFormValidator;
-export declare const booleanValidator: GenericFormValidator;
-export declare const undefinedValidator: GenericFormValidator;
-export declare const nullValidator: GenericFormValidator;
-export declare const dateValidator: GenericFormValidator;
-export declare const minNumberValidator: (minValue: number) => GenericFormValidator;
-export declare const maxNumberValidator: (maxValue: number) => GenericFormValidator;
-export declare const minDateValidator: (minValue: Date) => GenericFormValidator;
-export declare const maxDateValidator: (maxValue: Date) => GenericFormValidator;
-export declare const oneOf: <V extends GenericFormValidator>(...validators: V[]) => GenericFormValidator;
+import { GenericValidator } from "./types";
+export declare const truthyValidator: GenericValidator;
+export declare const stringValidator: GenericValidator;
+export declare const numberValidator: GenericValidator;
+export declare const booleanValidator: GenericValidator;
+export declare const undefinedValidator: GenericValidator;
+export declare const nullValidator: GenericValidator;
+export declare const dateValidator: GenericValidator;
+export declare const minNumberValidator: (minValue: number) => GenericValidator;
+export declare const maxNumberValidator: (maxValue: number) => GenericValidator;
+export declare const minDateValidator: (minValue: Date) => GenericValidator;
+export declare const maxDateValidator: (maxValue: Date) => GenericValidator;
+export declare const oneOf: <V extends GenericValidator>(
+  ...validators: V[]
+) => GenericValidator;
