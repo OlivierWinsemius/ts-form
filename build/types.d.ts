@@ -6,9 +6,6 @@ export declare type FormValidators<V extends FormValues> = {
     [field in keyof V]: FormFieldValidator<V, keyof V>;
 };
 export declare type FormSubmit<V extends FormValues> = (values: V, form: Form<V>) => void | Promise<void>;
-export declare type TouchedFields<V extends FormValues> = {
-    [field in keyof V]: boolean;
-};
 export declare type FormErrors<V extends FormValues> = {
     [field in keyof V]: string[];
 };
@@ -22,11 +19,11 @@ export interface FormProperties<V extends FormValues> {
     onSubmit: FormSubmit<V>;
     validators?: ValidatorCreator<V>;
 }
-export interface FormField<V extends FormValues, F extends keyof V> {
-    readonly errors: FormErrors<V>[F];
+export interface FormField<V> {
+    readonly errors: string[];
     readonly isValid: boolean;
     readonly isTouched: boolean;
-    readonly value: V[F];
-    setValue(value: V[F]): Promise<void>;
+    readonly value: V;
+    setValue(value: V): Promise<void>;
 }
 export {};

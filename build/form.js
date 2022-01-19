@@ -25,7 +25,7 @@ class Form {
             return this.formErrors[field];
         };
         this.getFieldIsTouched = (field) => {
-            return !!this.touchedFields[field];
+            return this.values[field] !== this.initialValues[field];
         };
         this.validateField = (field) => __awaiter(this, void 0, void 0, function* () {
             const { values, validators } = this;
@@ -42,7 +42,6 @@ class Form {
         });
         this.setFieldValue = (field, value) => {
             this.values[field] = value;
-            this.touchedFields[field] = true;
             return this.validateField(field);
         };
         this.isSubmitting = false;
@@ -83,14 +82,12 @@ class Form {
         this.reset = () => {
             const { initialValues } = this;
             this.values = Object.assign({}, initialValues);
-            this.touchedFields = (0, object_from_keys_1.objectFromKeys)(initialValues, () => false);
             return this.validateAllFields();
         };
         this.initialValues = Object.assign({}, values);
         this.values = Object.assign({}, values);
         this.fieldNames = Object.keys(values);
         this.onSubmit = onSubmit;
-        this.touchedFields = (0, object_from_keys_1.objectFromKeys)(values, () => false);
         this.formErrors = (0, object_from_keys_1.objectFromKeys)(values, () => []);
         this.validators = (0, object_from_keys_1.objectFromKeys)(values, (key) => {
             var _a;

@@ -1,7 +1,6 @@
 import {
   FormValues,
   FormSubmit,
-  TouchedFields,
   FormProperties,
   FormErrors,
   FormValidators,
@@ -85,7 +84,7 @@ export class Form<V extends FormValues> {
     return fieldNames.every((field) => getFieldErrors(field).length === 0);
   }
 
-  getField = <F extends keyof V>(field: F): FormField<V, F> => {
+  getField = <F extends keyof V>(field: F): FormField<V[F]> => {
     const { getFieldIsTouched, getFieldErrors, getFieldValue, setFieldValue } =
       this;
 
