@@ -78,10 +78,12 @@ export class Form<V extends FormValues> {
 
   isSubmitting = false;
 
+  get isTouched() {
+    return this.fieldNames.every((field) => this.getField(field).isTouched);
+  }
+
   get isValid() {
-    return Object.values(this.formErrors).every(
-      (messages) => messages.length === 0
-    );
+    return this.fieldNames.every((field) => this.getField(field).isValid);
   }
 
   getField = <F extends keyof V>(field: F): FormField<V, F> => {

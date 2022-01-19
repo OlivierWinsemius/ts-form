@@ -10,10 +10,12 @@ describe("form", () => {
     expect(formField.value).toStrictEqual(values.fieldName);
 
     await formField.setValue(2);
+    expect(form.isTouched).toStrictEqual(true);
     expect(formField.isTouched).toStrictEqual(true);
     expect(formField.value).not.toStrictEqual(values.fieldName);
     form.reset();
 
+    expect(form.isTouched).toStrictEqual(false);
     expect(formField.isTouched).toStrictEqual(false);
     expect(formField.value).toStrictEqual(values.fieldName);
   });

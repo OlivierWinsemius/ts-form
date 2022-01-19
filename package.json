@@ -33,7 +33,7 @@
   },
   "scripts": {
     "lint": "eslint src",
-    "format": "prettier --write .",
+    "format": "prettier --write src",
     "typecheck": "tsc",
     "test": "jest src --collectCoverage",
     "build": "rm -r build && tsc --project tsconfig.build.json"
