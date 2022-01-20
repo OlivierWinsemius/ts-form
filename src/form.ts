@@ -47,8 +47,7 @@ export class Form<V extends FormValues> {
   };
 
   protected getIsValid = () => {
-    const { fieldNames, getFieldErrors } = this;
-    return fieldNames.every((field) => getFieldErrors(field).length === 0);
+    return Object.values(this.formErrors).flat().length === 0;
   };
 
   protected validateField = async <F extends keyof V>(field: F) => {
@@ -89,6 +88,8 @@ export class Form<V extends FormValues> {
       validators?.[key]?.(validator);
       return validator;
     });
+
+    this.validateAllFields();
   }
 
   get isValid() {

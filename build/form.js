@@ -37,8 +37,7 @@ class Form {
             return !!fieldNames.find((field) => getIsFieldTouched(field));
         };
         this.getIsValid = () => {
-            const { fieldNames, getFieldErrors } = this;
-            return fieldNames.every((field) => getFieldErrors(field).length === 0);
+            return Object.values(this.formErrors).flat().length === 0;
         };
         this.validateField = (field) => __awaiter(this, void 0, void 0, function* () {
             const { formValues, formValidators } = this;
