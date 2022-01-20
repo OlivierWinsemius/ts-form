@@ -31,6 +31,8 @@ describe("form", () => {
       });
 
       await expect(form.submit()).resolves.toBeUndefined();
+
+      expect(form.isSubmitting).toStrictEqual(false);
       expect(onSubmit).toBeCalled();
     });
 
@@ -46,6 +48,8 @@ describe("form", () => {
       await expect(form.submit()).rejects.toThrowError(
         "fieldName:\n\t- invalid_type_string"
       );
+
+      expect(form.isSubmitting).toStrictEqual(false);
       expect(onSubmit).not.toBeCalled();
     });
   });
