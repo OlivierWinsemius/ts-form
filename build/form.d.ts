@@ -18,7 +18,7 @@ export declare class Form<V extends FormValues> {
     protected getIsTouched: () => boolean;
     protected getIsValid: () => boolean;
     protected validateField: <F extends keyof V>(field: F) => Promise<void>;
-    protected validateAllFields: () => Promise<string[]>;
+    protected validateAllFields: () => Promise<boolean>;
     protected setFieldValue: <F extends keyof V>(field: F, value: V[F]) => Promise<void>;
     constructor({ values, onSubmit, validators }: FormProperties<V>);
     get isValid(): boolean;
@@ -26,5 +26,5 @@ export declare class Form<V extends FormValues> {
     get isSubmitting(): boolean;
     getField: <F extends keyof V>(field: F) => FormField<V[F]>;
     submit: () => Promise<void>;
-    reset: () => void;
+    reset: () => Promise<void>;
 }

@@ -61,14 +61,15 @@ export class Form<V extends FormValues> {
   protected validateAllFields = async () => {
     const { formValues, formValidators, fieldNames } = this;
 
-    const validate = fieldNames.map(async (field) => {
-      const errors = await formValidators[field].validate(formValues, field);
+    let isInvalid = false;
+    for (const field of fieldNames) {
+      const { validate } = formValidators[field];
+      const errors = await validate(formValues, field);
       this.formErrors[field] = errors;
-      return errors;
-    });
+      isInvalid = isInvalid || errors.length > 0;
+    }
 
-    const allErrors = await Promise.all(validate);
-    return allErrors.flat();
+    return !isInvalid;
   };
 
   protected setFieldValue = <F extends keyof V>(field: F, value: V[F]) => {
@@ -132,8 +133,8 @@ export class Form<V extends FormValues> {
     this.beforeSubmit(this);
 
     try {
-      const errors = await validateAllFields();
-      if (errors.length > 0) {
+      const isValid = await validateAllFields();
+      if (!isValid) {
         throw new FormError(this.formErrors);
       }
 

@@ -48,13 +48,14 @@ class Form {
         });
         this.validateAllFields = () => __awaiter(this, void 0, void 0, function* () {
             const { formValues, formValidators, fieldNames } = this;
-            const validate = fieldNames.map((field) => __awaiter(this, void 0, void 0, function* () {
-                const errors = yield formValidators[field].validate(formValues, field);
+            let isInvalid = false;
+            for (const field of fieldNames) {
+                const { validate } = formValidators[field];
+                const errors = yield validate(formValues, field);
                 this.formErrors[field] = errors;
-                return errors;
-            }));
-            const allErrors = yield Promise.all(validate);
-            return allErrors.flat();
+                isInvalid = isInvalid || errors.length > 0;
+            }
+            return !isInvalid;
         });
         this.setFieldValue = (field, value) => {
             this.formValues[field] = value;
@@ -85,8 +86,8 @@ class Form {
             this.isFormSubmitting = true;
             this.beforeSubmit(this);
             try {
-                const errors = yield validateAllFields();
-                if (errors.length > 0) {
+                const isValid = yield validateAllFields();
+                if (!isValid) {
                     throw new form_error_1.FormError(this.formErrors);
                 }
                 yield onSubmit(formValues, this);
@@ -96,11 +97,11 @@ class Form {
                 afterSubmit(this);
             }
         });
-        this.reset = () => {
+        this.reset = () => __awaiter(this, void 0, void 0, function* () {
             this.formValues = Object.assign({}, this.initialFormValues);
-            this.validateAllFields();
+            yield this.validateAllFields();
             this.afterReset(this);
-        };
+        });
         this.initialFormValues = Object.assign({}, values);
         this.formValues = Object.assign({}, values);
         this.fieldNames = Object.keys(values);
