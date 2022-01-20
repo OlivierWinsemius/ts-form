@@ -112,6 +112,7 @@ class Form {
             (_a = validators === null || validators === void 0 ? void 0 : validators[key]) === null || _a === void 0 ? void 0 : _a.call(validators, validator);
             return validator;
         });
+        this.validateAllFields();
     }
     get isValid() {
         return this.getIsValid();
