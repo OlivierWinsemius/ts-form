@@ -6,6 +6,7 @@ export declare class FieldValidator<V extends FormValues> {
     custom: (validator: Validator<V, keyof V>) => this;
     truthy: () => this;
     string: () => this;
+    email: () => this;
     number: () => this;
     boolean: () => this;
     date: () => this;

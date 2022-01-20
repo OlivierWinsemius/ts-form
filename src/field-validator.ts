@@ -12,6 +12,7 @@ import {
   oneOf,
   stringValidator,
   undefinedValidator,
+  emailValidator,
 } from "./validators";
 
 export class FieldValidator<V extends FormValues> {
@@ -31,6 +32,11 @@ export class FieldValidator<V extends FormValues> {
 
   string = () => {
     this.validators.push(stringValidator);
+    return this;
+  };
+
+  email = () => {
+    this.validators.push(emailValidator);
     return this;
   };
 

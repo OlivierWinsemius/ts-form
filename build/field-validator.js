@@ -28,6 +28,10 @@ class FieldValidator {
             this.validators.push(validators_1.stringValidator);
             return this;
         };
+        this.email = () => {
+            this.validators.push(validators_1.emailValidator);
+            return this;
+        };
         this.number = () => {
             this.validators.push(validators_1.numberValidator);
             return this;

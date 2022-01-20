@@ -10,6 +10,7 @@ import {
   dateValidator,
   maxDateValidator,
   minDateValidator,
+  emailValidator,
   oneOf,
 } from "../validators";
 
@@ -145,5 +146,25 @@ describe("validators", () => {
     expect(await validator("test", {})).toBeUndefined();
     expect(await validator(true, {})).toStrictEqual(message);
     expect(await validator(new Date(), {})).toStrictEqual(message);
+  });
+
+  it("emailValidator", () => {
+    const typeMessage = "invalid_type_string";
+    const valueMessage = "invalid_value_email";
+
+    expect(emailValidator("test@email.com", {})).toBeUndefined();
+    expect(emailValidator("test@email.co.uk", {})).toBeUndefined();
+    expect(emailValidator("test@email.something.uk", {})).toBeUndefined();
+    expect(emailValidator("test.name@email.something.com", {})).toBeUndefined();
+
+    expect(emailValidator("test@invalid.123", {})).toStrictEqual(valueMessage);
+    expect(emailValidator("not_email", {})).toStrictEqual(valueMessage);
+    expect(emailValidator("", {})).toStrictEqual(valueMessage);
+
+    expect(emailValidator(1, {})).toStrictEqual(typeMessage);
+    expect(emailValidator(true, {})).toStrictEqual(typeMessage);
+    expect(emailValidator(new Date(), {})).toStrictEqual(typeMessage);
+    expect(emailValidator(null, {})).toStrictEqual(typeMessage);
+    expect(emailValidator(undefined, {})).toStrictEqual(typeMessage);
   });
 });

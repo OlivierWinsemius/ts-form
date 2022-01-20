@@ -66,6 +66,8 @@ describe("FieldValidator", () => {
       (v) => v.oneOf(v.string, v.number),
       ["invalid_type_string / invalid_type_number"],
     ],
+    [true, (v) => v.email(), ["invalid_type_string"]],
+    ["test", (v) => v.email(), ["invalid_value_email"]],
   ];
 
   it.each(tests)("%j %j %j", async (value, setValidations, result) => {
