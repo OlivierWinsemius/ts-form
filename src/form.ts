@@ -72,6 +72,10 @@ export class Form<V extends FormValues> {
   };
 
   protected setFieldValue = <F extends keyof V>(field: F, value: V[F]) => {
+    if (this.isFormSubmitting) {
+      return Promise.resolve();
+    }
+
     this.formValues[field] = value;
     return this.validateField(field);
   };
@@ -128,7 +132,17 @@ export class Form<V extends FormValues> {
   };
 
   submit = async () => {
-    const { validateAllFields, onSubmit, afterSubmit, formValues } = this;
+    const {
+      validateAllFields,
+      onSubmit,
+      afterSubmit,
+      formValues,
+      isFormSubmitting,
+    } = this;
+
+    if (isFormSubmitting) {
+      return;
+    }
 
     this.isFormSubmitting = true;
     this.beforeSubmit(this);

@@ -57,6 +57,9 @@ class Form {
             return !isInvalid;
         });
         this.setFieldValue = (field, value) => {
+            if (this.isFormSubmitting) {
+                return Promise.resolve();
+            }
             this.formValues[field] = value;
             return this.validateField(field);
         };
@@ -81,7 +84,10 @@ class Form {
             };
         };
         this.submit = () => __awaiter(this, void 0, void 0, function* () {
-            const { validateAllFields, onSubmit, afterSubmit, formValues } = this;
+            const { validateAllFields, onSubmit, afterSubmit, formValues, isFormSubmitting, } = this;
+            if (isFormSubmitting) {
+                return;
+            }
             this.isFormSubmitting = true;
             this.beforeSubmit(this);
             try {
