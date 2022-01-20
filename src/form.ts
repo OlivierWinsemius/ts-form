@@ -144,9 +144,9 @@ export class Form<V extends FormValues> {
     }
   };
 
-  reset = () => {
+  reset = async () => {
     this.formValues = { ...this.initialFormValues };
-    this.validateAllFields();
+    await this.validateAllFields();
     this.afterReset(this);
   };
 }
