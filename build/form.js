@@ -16,9 +16,10 @@ const object_from_keys_1 = require("./object-from-keys");
 class Form {
     constructor({ values, onSubmit, validators }) {
         this.isFormSubmitting = false;
-        this.afterSubmitForm = () => undefined;
-        this.afterValidateForm = () => undefined;
-        this.afterValidateField = () => undefined;
+        this.afterReset = () => undefined;
+        this.beforeSubmit = () => undefined;
+        this.afterSubmit = () => undefined;
+        this.afterValidate = () => undefined;
         this.getFieldValue = (field) => {
             return this.formValues[field];
         };
@@ -41,19 +42,19 @@ class Form {
         };
         this.validateField = (field) => __awaiter(this, void 0, void 0, function* () {
             const { formValues, formValidators } = this;
-            this.formErrors[field] = yield formValidators[field].validate(formValues);
-            this.afterValidateField(field, this);
+            const { validate } = formValidators[field];
+            this.formErrors[field] = yield validate(formValues, field);
+            this.afterValidate(field, this);
         });
         this.validateAllFields = () => __awaiter(this, void 0, void 0, function* () {
             const { formValues, formValidators, fieldNames } = this;
             const validate = fieldNames.map((field) => __awaiter(this, void 0, void 0, function* () {
-                const fieldMessages = yield formValidators[field].validate(formValues);
-                this.formErrors[field] = fieldMessages;
-                return fieldMessages;
+                const errors = yield formValidators[field].validate(formValues, field);
+                this.formErrors[field] = errors;
+                return errors;
             }));
-            const formMessages = yield Promise.all(validate);
-            this.afterValidateForm(this);
-            return formMessages.flat();
+            const allErrors = yield Promise.all(validate);
+            return allErrors.flat();
         });
         this.setFieldValue = (field, value) => {
             this.formValues[field] = value;
@@ -80,36 +81,37 @@ class Form {
             };
         };
         this.submit = () => __awaiter(this, void 0, void 0, function* () {
-            const { validateAllFields, onSubmitForm, afterSubmitForm, formValues } = this;
+            const { validateAllFields, onSubmit, afterSubmit, formValues } = this;
             this.isFormSubmitting = true;
+            this.beforeSubmit(this);
             try {
                 const errors = yield validateAllFields();
                 if (errors.length > 0) {
                     throw new form_error_1.FormError(this.formErrors);
                 }
-                yield onSubmitForm(formValues, this);
+                yield onSubmit(formValues, this);
             }
             finally {
                 this.isFormSubmitting = false;
-                afterSubmitForm(this);
+                afterSubmit(this);
             }
         });
         this.reset = () => {
             this.formValues = Object.assign({}, this.initialFormValues);
-            return this.validateAllFields();
+            this.validateAllFields();
+            this.afterReset(this);
         };
         this.initialFormValues = Object.assign({}, values);
         this.formValues = Object.assign({}, values);
         this.fieldNames = Object.keys(values);
-        this.onSubmitForm = onSubmit;
+        this.onSubmit = onSubmit;
         this.formErrors = (0, object_from_keys_1.objectFromKeys)(values, () => []);
         this.formValidators = (0, object_from_keys_1.objectFromKeys)(values, (key) => {
             var _a;
-            const validator = new field_validator_1.FormFieldValidator(key);
+            const validator = new field_validator_1.FormFieldValidator();
             (_a = validators === null || validators === void 0 ? void 0 : validators[key]) === null || _a === void 0 ? void 0 : _a.call(validators, validator);
             return validator;
         });
-        this.validateAllFields();
     }
     get isValid() {
         return this.getIsValid();

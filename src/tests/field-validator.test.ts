@@ -69,12 +69,10 @@ describe("FieldValidator", () => {
   ];
 
   it.each(tests)("%j %j %j", async (value, setValidations, result) => {
-    const values = { value: value };
-
-    const fieldValidator = new FormFieldValidator("value");
+    const fieldValidator = new FormFieldValidator();
     setValidations(fieldValidator);
 
-    const errors = await fieldValidator.validate(values);
+    const errors = await fieldValidator.validate({ value }, "value");
     expect(errors).toStrictEqual(result);
   });
 });

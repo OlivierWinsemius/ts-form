@@ -1,15 +1,16 @@
 import { FormValues, FormSubmit, FormProperties, FormErrors, FormValidators, FormField } from "./types";
 export declare class Form<V extends FormValues> {
-    protected onSubmitForm: FormSubmit<V>;
+    protected onSubmit: FormSubmit<V>;
     protected fieldNames: (keyof V)[];
     protected formValidators: FormValidators<V>;
     protected formErrors: FormErrors<V>;
     protected formValues: V;
     protected initialFormValues: V;
     protected isFormSubmitting: boolean;
-    protected afterSubmitForm: (form: this) => void;
-    protected afterValidateForm: (form: this) => void;
-    protected afterValidateField: (field: keyof V, form: this) => void;
+    protected afterReset: (form: this) => void;
+    protected beforeSubmit: (form: this) => void;
+    protected afterSubmit: (form: this) => void;
+    protected afterValidate: (field: keyof V, form: this) => void;
     protected getFieldValue: <F extends keyof V>(field: F) => V[F];
     protected getFieldErrors: <F extends keyof V>(field: F) => FormErrors<V>[F];
     protected getIsFieldTouched: <F extends keyof V>(field: F) => boolean;
@@ -25,5 +26,5 @@ export declare class Form<V extends FormValues> {
     get isSubmitting(): boolean;
     getField: <F extends keyof V>(field: F) => FormField<V[F]>;
     submit: () => Promise<void>;
-    reset: () => Promise<string[]>;
+    reset: () => void;
 }

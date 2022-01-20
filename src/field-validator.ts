@@ -96,13 +96,6 @@ export class FieldValidator<V extends FormValues> {
 export class FormFieldValidator<
   V extends FormValues
 > extends FieldValidator<V> {
-  fieldName: keyof V;
-
-  constructor(fieldName: keyof V) {
-    super();
-    this.fieldName = fieldName;
-  }
-
   private shouldValidate = <F extends keyof V>(value: V[F]) => {
     if (value === undefined) {
       return !this.allowUndefined;
@@ -138,8 +131,11 @@ export class FormFieldValidator<
     return this.shouldValidateAfter(messages);
   };
 
-  validate = (formValues: V): Promise<string[]> => {
-    const value = formValues[this.fieldName];
+  validate = <F extends keyof V>(
+    formValues: V,
+    fieldName: F
+  ): Promise<string[]> => {
+    const value = formValues[fieldName];
 
     if (!this.shouldValidate(value)) {
       return Promise.resolve([]);

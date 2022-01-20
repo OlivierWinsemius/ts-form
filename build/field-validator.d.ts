@@ -18,10 +18,8 @@ export declare class FieldValidator<V extends FormValues> {
     nullable: () => this;
 }
 export declare class FormFieldValidator<V extends FormValues> extends FieldValidator<V> {
-    fieldName: keyof V;
-    constructor(fieldName: keyof V);
     private shouldValidate;
     private shouldValidateAfter;
     private getValidationErrors;
-    validate: (formValues: V) => Promise<string[]>;
+    validate: <F extends keyof V>(formValues: V, fieldName: F) => Promise<string[]>;
 }

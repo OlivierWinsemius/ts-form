@@ -76,8 +76,8 @@ class FieldValidator {
 }
 exports.FieldValidator = FieldValidator;
 class FormFieldValidator extends FieldValidator {
-    constructor(fieldName) {
-        super();
+    constructor() {
+        super(...arguments);
         this.shouldValidate = (value) => {
             if (value === undefined) {
                 return !this.allowUndefined;
@@ -103,14 +103,13 @@ class FormFieldValidator extends FieldValidator {
             const messages = validationMessages.filter((m) => !!m);
             return this.shouldValidateAfter(messages);
         });
-        this.validate = (formValues) => {
-            const value = formValues[this.fieldName];
+        this.validate = (formValues, fieldName) => {
+            const value = formValues[fieldName];
             if (!this.shouldValidate(value)) {
                 return Promise.resolve([]);
             }
             return this.getValidationErrors(value, formValues);
         };
-        this.fieldName = fieldName;
     }
 }
 exports.FormFieldValidator = FormFieldValidator;
