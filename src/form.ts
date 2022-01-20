@@ -89,7 +89,7 @@ export class Form<V extends FormValues> {
       return validator;
     });
 
-    this.validateAllFields();
+    this.reset();
   }
 
   get isValid() {
