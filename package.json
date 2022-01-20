@@ -35,7 +35,7 @@
     "lint": "eslint src",
     "format": "prettier --write src",
     "typecheck": "tsc",
-    "test": "jest src --collectCoverage",
+    "test": "jest src",
     "build": "rm -r build && tsc --project tsconfig.build.json"
   }
 }
