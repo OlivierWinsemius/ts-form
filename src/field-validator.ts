@@ -1,4 +1,3 @@
-import { Form } from "./form";
 import { Validator, FormValues, GenericValidator } from "./types";
 import {
   truthyValidator,
@@ -15,12 +14,12 @@ import {
   undefinedValidator,
 } from "./validators";
 
-export class FieldValidator<V extends FormValues, F extends keyof V> {
+export class FieldValidator<V extends FormValues> {
   protected allowUndefined = false;
   protected allowNull = false;
-  protected validators: Validator<V, F>[] = [];
+  protected validators: Validator<V, keyof V>[] = [];
 
-  custom = (validator: Validator<V, F>) => {
+  custom = (validator: Validator<V, keyof V>) => {
     this.validators.push(validator);
     return this;
   };
@@ -70,7 +69,7 @@ export class FieldValidator<V extends FormValues, F extends keyof V> {
     return this;
   };
 
-  oneOf = (...validators: (() => FieldValidator<V, F>)[]) => {
+  oneOf = (...validators: (() => FieldValidator<V>)[]) => {
     validators.forEach((v) => v());
 
     const validations = this.validators.splice(
@@ -95,45 +94,57 @@ export class FieldValidator<V extends FormValues, F extends keyof V> {
 }
 
 export class FormFieldValidator<
-  V extends FormValues,
-  F extends keyof V
-> extends FieldValidator<V, F> {
-  protected form: Form<V>;
-  fieldName: F;
+  V extends FormValues
+> extends FieldValidator<V> {
+  fieldName: keyof V;
 
-  constructor(form: Form<V>, fieldName: F) {
+  constructor(fieldName: keyof V) {
     super();
     this.fieldName = fieldName;
-    this.form = form;
   }
 
-  validate = async (formValues: V) => {
-    const { fieldName, validators, allowNull, allowUndefined } = this;
-    const value = formValues[fieldName];
-
-    if (
-      (allowUndefined && value === undefined) ||
-      (allowNull && value === null)
-    ) {
-      return [];
+  private shouldValidate = <F extends keyof V>(value: V[F]) => {
+    if (value === undefined) {
+      return !this.allowUndefined;
     }
 
-    const errorValidations = await Promise.all(
-      validators.map((validate) => validate(value, formValues))
-    );
-
-    const errors = new Set(
-      errorValidations.filter((message): message is string => !!message)
-    );
-
-    if (allowUndefined && errors.size === 1) {
-      errors.delete("invalid_type_undefined");
+    if (value === null) {
+      return !this.allowNull;
     }
 
-    if (allowNull && errors.size === 1) {
-      errors.delete("invalid_type_null");
+    return true;
+  };
+
+  private shouldValidateAfter = (errors: string[]) => {
+    const errorSet = new Set(errors);
+
+    if (this.allowUndefined) {
+      errorSet.delete("invalid_type_undefined");
+    } else if (this.allowNull) {
+      errorSet.delete("invalid_type_null");
     }
 
-    return [...errors];
+    return [...errorSet];
+  };
+
+  private getValidationErrors = async <F extends keyof V>(
+    value: V[F],
+    formValues: V
+  ) => {
+    const validationPromises = this.validators.map((v) => v(value, formValues));
+    const validationMessages = await Promise.all(validationPromises);
+    const messages = validationMessages.filter((m): m is string => !!m);
+
+    return this.shouldValidateAfter(messages);
+  };
+
+  validate = (formValues: V): Promise<string[]> => {
+    const value = formValues[this.fieldName];
+
+    if (!this.shouldValidate(value)) {
+      return Promise.resolve([]);
+    }
+
+    return this.getValidationErrors(value, formValues);
   };
 }

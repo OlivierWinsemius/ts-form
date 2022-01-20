@@ -76,27 +76,41 @@ class FieldValidator {
 }
 exports.FieldValidator = FieldValidator;
 class FormFieldValidator extends FieldValidator {
-    constructor(form, fieldName) {
+    constructor(fieldName) {
         super();
-        this.validate = (formValues) => __awaiter(this, void 0, void 0, function* () {
-            const { fieldName, validators, allowNull, allowUndefined } = this;
-            const value = formValues[fieldName];
-            if ((allowUndefined && value === undefined) ||
-                (allowNull && value === null)) {
-                return [];
+        this.shouldValidate = (value) => {
+            if (value === undefined) {
+                return !this.allowUndefined;
             }
-            const errorValidations = yield Promise.all(validators.map((validate) => validate(value, formValues)));
-            const errors = new Set(errorValidations.filter((message) => !!message));
-            if (allowUndefined && errors.size === 1) {
-                errors.delete("invalid_type_undefined");
+            if (value === null) {
+                return !this.allowNull;
             }
-            if (allowNull && errors.size === 1) {
-                errors.delete("invalid_type_null");
+            return true;
+        };
+        this.shouldValidateAfter = (errors) => {
+            const errorSet = new Set(errors);
+            if (this.allowUndefined) {
+                errorSet.delete("invalid_type_undefined");
             }
-            return [...errors];
+            else if (this.allowNull) {
+                errorSet.delete("invalid_type_null");
+            }
+            return [...errorSet];
+        };
+        this.getValidationErrors = (value, formValues) => __awaiter(this, void 0, void 0, function* () {
+            const validationPromises = this.validators.map((v) => v(value, formValues));
+            const validationMessages = yield Promise.all(validationPromises);
+            const messages = validationMessages.filter((m) => !!m);
+            return this.shouldValidateAfter(messages);
         });
+        this.validate = (formValues) => {
+            const value = formValues[this.fieldName];
+            if (!this.shouldValidate(value)) {
+                return Promise.resolve([]);
+            }
+            return this.getValidationErrors(value, formValues);
+        };
         this.fieldName = fieldName;
-        this.form = form;
     }
 }
 exports.FormFieldValidator = FormFieldValidator;

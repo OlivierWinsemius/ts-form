@@ -59,12 +59,16 @@ export class Form<V extends FormValues> {
   protected validateAllFields = async () => {
     const { formValues, formValidators, fieldNames } = this;
     const validate = fieldNames.map(async (field) => {
-      this.formErrors[field] = await formValidators[field].validate(formValues);
+      const fieldMessages = await formValidators[field].validate(formValues);
+      this.formErrors[field] = fieldMessages;
+      return fieldMessages;
     });
 
-    await Promise.all(validate);
+    const formMessages = await Promise.all(validate);
 
     this.afterValidateForm(this);
+
+    return formMessages.flat();
   };
 
   protected setFieldValue = <F extends keyof V>(field: F, value: V[F]) => {
@@ -80,7 +84,7 @@ export class Form<V extends FormValues> {
 
     this.formErrors = objectFromKeys(values, () => []);
     this.formValidators = objectFromKeys(values, (key) => {
-      const validator = new FormFieldValidator(this, key);
+      const validator = new FormFieldValidator<V>(key);
       validators?.[key]?.(validator);
       return validator;
     });
@@ -124,25 +128,28 @@ export class Form<V extends FormValues> {
   };
 
   submit = async () => {
+    const { validateAllFields, onSubmitForm, afterSubmitForm, formValues } =
+      this;
+
     this.isFormSubmitting = true;
 
     try {
-      await this.validateAllFields();
+      const errors = await validateAllFields();
 
-      if (!this.isValid) {
+      if (errors.length > 0) {
         throw new FormError(this.formErrors);
       }
 
-      await this.onSubmitForm(this.formValues, this);
+      await onSubmitForm(formValues, this);
     } finally {
       this.isFormSubmitting = false;
-      this.afterSubmitForm(this);
+
+      afterSubmitForm(this);
     }
   };
 
   reset = () => {
-    const { initialFormValues } = this;
-    this.formValues = { ...initialFormValues };
+    this.formValues = { ...this.initialFormValues };
     return this.validateAllFields();
   };
 }

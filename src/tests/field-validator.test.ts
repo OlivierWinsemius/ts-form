@@ -1,15 +1,10 @@
 import { FormFieldValidator, FieldValidator } from "../field-validator";
-import { Form } from "../form";
 import { FormValues } from "../types";
 
 describe("FieldValidator", () => {
-  const onSubmit = jest.fn();
-
   type Test = [
     unknown,
-    <V extends FormValues>(
-      validator: FieldValidator<V, keyof V>
-    ) => FieldValidator<V, keyof V>,
+    <V extends FormValues>(validator: FieldValidator<V>) => FieldValidator<V>,
     string[]
   ];
 
@@ -29,19 +24,11 @@ describe("FieldValidator", () => {
 
     [null, (v) => v.number().nullable(), []],
     [5, (v) => v.number().nullable(), []],
-    [
-      "test",
-      (v) => v.number().nullable(),
-      ["invalid_type_number", "invalid_type_null"],
-    ],
+    ["test", (v) => v.number().nullable(), ["invalid_type_number"]],
 
     [undefined, (v) => v.number().maybe(), []],
     [5, (v) => v.number().maybe(), []],
-    [
-      "test",
-      (v) => v.number().maybe(),
-      ["invalid_type_number", "invalid_type_undefined"],
-    ],
+    ["test", (v) => v.number().maybe(), ["invalid_type_number"]],
 
     ["test", (v) => v.string(), []],
     [5, (v) => v.string(), ["invalid_type_string"]],
@@ -81,11 +68,10 @@ describe("FieldValidator", () => {
     ],
   ];
 
-  it.each(tests)("%j", async (value, setValidations, result) => {
+  it.each(tests)("%j %j %j", async (value, setValidations, result) => {
     const values = { value: value };
-    const form = new Form({ values, onSubmit });
 
-    const fieldValidator = new FormFieldValidator(form, "value");
+    const fieldValidator = new FormFieldValidator("value");
     setValidations(fieldValidator);
 
     const errors = await fieldValidator.validate(values);

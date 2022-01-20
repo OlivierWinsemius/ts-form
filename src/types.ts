@@ -6,7 +6,7 @@ type FormValue<V = unknown> = V;
 export type FormValues = Record<string, FormValue>;
 
 export type FormValidators<V extends FormValues> = {
-  [field in keyof V]: FormFieldValidator<V, keyof V>;
+  [field in keyof V]: FormFieldValidator<V>;
 };
 
 export type FormSubmit<V extends FormValues> = (
@@ -26,9 +26,7 @@ export type Validator<V extends FormValues, F extends keyof V> = (
 export type GenericValidator = Validator<FormValues, keyof FormValues>;
 
 export type ValidatorCreator<V extends FormValues> = {
-  [field in keyof V]?: (
-    validator: FieldValidator<V, field>
-  ) => FieldValidator<V, field>;
+  [field in keyof V]?: (validator: FieldValidator<V>) => FieldValidator<V>;
 };
 export interface FormProperties<V extends FormValues> {
   values: V;

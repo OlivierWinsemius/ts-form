@@ -47,10 +47,13 @@ class Form {
         this.validateAllFields = () => __awaiter(this, void 0, void 0, function* () {
             const { formValues, formValidators, fieldNames } = this;
             const validate = fieldNames.map((field) => __awaiter(this, void 0, void 0, function* () {
-                this.formErrors[field] = yield formValidators[field].validate(formValues);
+                const fieldMessages = yield formValidators[field].validate(formValues);
+                this.formErrors[field] = fieldMessages;
+                return fieldMessages;
             }));
-            yield Promise.all(validate);
+            const formMessages = yield Promise.all(validate);
             this.afterValidateForm(this);
+            return formMessages.flat();
         });
         this.setFieldValue = (field, value) => {
             this.formValues[field] = value;
@@ -77,22 +80,22 @@ class Form {
             };
         };
         this.submit = () => __awaiter(this, void 0, void 0, function* () {
+            const { validateAllFields, onSubmitForm, afterSubmitForm, formValues } = this;
             this.isFormSubmitting = true;
             try {
-                yield this.validateAllFields();
-                if (!this.isValid) {
+                const errors = yield validateAllFields();
+                if (errors.length > 0) {
                     throw new form_error_1.FormError(this.formErrors);
                 }
-                yield this.onSubmitForm(this.formValues, this);
+                yield onSubmitForm(formValues, this);
             }
             finally {
                 this.isFormSubmitting = false;
-                this.afterSubmitForm(this);
+                afterSubmitForm(this);
             }
         });
         this.reset = () => {
-            const { initialFormValues } = this;
-            this.formValues = Object.assign({}, initialFormValues);
+            this.formValues = Object.assign({}, this.initialFormValues);
             return this.validateAllFields();
         };
         this.initialFormValues = Object.assign({}, values);
@@ -102,7 +105,7 @@ class Form {
         this.formErrors = (0, object_from_keys_1.objectFromKeys)(values, () => []);
         this.formValidators = (0, object_from_keys_1.objectFromKeys)(values, (key) => {
             var _a;
-            const validator = new field_validator_1.FormFieldValidator(this, key);
+            const validator = new field_validator_1.FormFieldValidator(key);
             (_a = validators === null || validators === void 0 ? void 0 : validators[key]) === null || _a === void 0 ? void 0 : _a.call(validators, validator);
             return validator;
         });
