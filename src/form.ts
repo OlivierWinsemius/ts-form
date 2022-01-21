@@ -13,8 +13,8 @@ import { objectFromKeys } from "./object-from-keys";
 export class Form<V extends FormValues> {
   protected onSubmit: FormSubmit<V>;
   protected fieldNames: (keyof V)[];
-  protected formValidators: FormValidators<V>;
   protected formErrors: FormErrors<V>;
+  protected formValidators: FormValidators<V>;
   protected formValues: V;
   protected initialFormValues: V;
   protected isFormSubmitting = false;

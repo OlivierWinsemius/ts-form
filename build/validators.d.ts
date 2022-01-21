@@ -10,5 +10,5 @@ export declare const minNumberValidator: (minValue: number) => GenericValidator;
 export declare const maxNumberValidator: (maxValue: number) => GenericValidator;
 export declare const minDateValidator: (minValue: Date) => GenericValidator;
 export declare const maxDateValidator: (maxValue: Date) => GenericValidator;
-export declare const oneOf: <V extends GenericValidator>(...validators: V[]) => GenericValidator;
 export declare const emailValidator: GenericValidator;
+export declare const oneOf: <V extends GenericValidator>(...validators: V[]) => GenericValidator;

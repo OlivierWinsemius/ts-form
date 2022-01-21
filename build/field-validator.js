@@ -91,12 +91,12 @@ class FormFieldValidator extends FieldValidator {
             }
             return true;
         };
-        this.shouldValidateAfter = (errors) => {
+        this.cleanupErrors = (errors) => {
             const errorSet = new Set(errors);
             if (this.allowUndefined) {
                 errorSet.delete("invalid_type_undefined");
             }
-            else if (this.allowNull) {
+            if (this.allowNull) {
                 errorSet.delete("invalid_type_null");
             }
             return [...errorSet];
@@ -105,7 +105,7 @@ class FormFieldValidator extends FieldValidator {
             const validationPromises = this.validators.map((v) => v(value, formValues));
             const validationMessages = yield Promise.all(validationPromises);
             const messages = validationMessages.filter((m) => !!m);
-            return this.shouldValidateAfter(messages);
+            return this.cleanupErrors(messages);
         });
         this.validate = (formValues, fieldName) => {
             const value = formValues[fieldName];

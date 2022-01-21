@@ -20,7 +20,7 @@ export declare class FieldValidator<V extends FormValues> {
 }
 export declare class FormFieldValidator<V extends FormValues> extends FieldValidator<V> {
     private shouldValidate;
-    private shouldValidateAfter;
+    private cleanupErrors;
     private getValidationErrors;
     validate: <F extends keyof V>(formValues: V, fieldName: F) => Promise<string[]>;
 }

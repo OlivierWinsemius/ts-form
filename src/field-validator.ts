@@ -114,12 +114,14 @@ export class FormFieldValidator<
     return true;
   };
 
-  private shouldValidateAfter = (errors: string[]) => {
+  private cleanupErrors = (errors: string[]) => {
     const errorSet = new Set(errors);
 
     if (this.allowUndefined) {
       errorSet.delete("invalid_type_undefined");
-    } else if (this.allowNull) {
+    }
+
+    if (this.allowNull) {
       errorSet.delete("invalid_type_null");
     }
 
@@ -134,7 +136,7 @@ export class FormFieldValidator<
     const validationMessages = await Promise.all(validationPromises);
     const messages = validationMessages.filter((m): m is string => !!m);
 
-    return this.shouldValidateAfter(messages);
+    return this.cleanupErrors(messages);
   };
 
   validate = <F extends keyof V>(
