@@ -1,9 +1,10 @@
 import { FormErrors, FormValues } from "./types";
 
-export class FormError<V extends FormValues> extends Error {
+export class FormError<Values extends FormValues> extends Error {
   name = "FormError";
+  formErrors: FormErrors<Values>;
 
-  constructor(formErrors: FormErrors<V>) {
+  constructor(formErrors: FormErrors<Values>) {
     super(
       Object.entries(formErrors)
         .flatMap(([fieldName, errors]) =>
@@ -11,5 +12,7 @@ export class FormError<V extends FormValues> extends Error {
         )
         .join("\n")
     );
+
+    this.formErrors = formErrors;
   }
 }

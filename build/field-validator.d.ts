@@ -1,9 +1,9 @@
 import { Validator, FormValues } from "./types";
-export declare class FieldValidator<V extends FormValues> {
+export declare class FieldValidator<Values extends FormValues> {
     protected allowUndefined: boolean;
     protected allowNull: boolean;
-    protected validators: Validator<V, keyof V>[];
-    custom: (validator: Validator<V, keyof V>) => this;
+    protected validators: Validator<Values, keyof Values>[];
+    custom: (validator: Validator<Values, keyof Values>) => this;
     truthy: () => this;
     string: () => this;
     email: () => this;
@@ -14,13 +14,13 @@ export declare class FieldValidator<V extends FormValues> {
     maxNumber: (max: number) => this;
     minDate: (min: Date) => this;
     maxDate: (max: Date) => this;
-    oneOf: (...validators: (() => FieldValidator<V>)[]) => this;
+    oneOf: (...validators: (() => FieldValidator<Values>)[]) => this;
     maybe: () => this;
     nullable: () => this;
 }
-export declare class FormFieldValidator<V extends FormValues> extends FieldValidator<V> {
+export declare class FormFieldValidator<Values extends FormValues> extends FieldValidator<Values> {
     private shouldValidate;
     private cleanupErrors;
     private getValidationErrors;
-    validate: <F extends keyof V>(formValues: V, fieldName: F) => Promise<string[]>;
+    validate: <Field extends keyof Values>(formValues: Values, fieldName: Field) => Promise<string[]>;
 }

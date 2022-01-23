@@ -14,12 +14,8 @@ const form_error_1 = require("./form-error");
 const field_validator_1 = require("./field-validator");
 const object_from_keys_1 = require("./object-from-keys");
 class Form {
-    constructor({ values, onSubmit, validators }) {
+    constructor({ values, onSubmit, validators, afterReset = () => undefined, afterSubmit = () => undefined, afterValidate = () => undefined, beforeSubmit = () => undefined, }) {
         this.isFormSubmitting = false;
-        this.afterReset = () => undefined;
-        this.beforeSubmit = () => undefined;
-        this.afterSubmit = () => undefined;
-        this.afterValidate = () => undefined;
         this.getFieldValue = (field) => {
             return this.formValues[field];
         };
@@ -111,8 +107,12 @@ class Form {
         this.formValues = Object.assign({}, values);
         this.fieldNames = Object.keys(values);
         this.onSubmit = onSubmit;
-        this.formErrors = (0, object_from_keys_1.objectFromKeys)(values, () => []);
-        this.formValidators = (0, object_from_keys_1.objectFromKeys)(values, (key) => {
+        this.afterReset = afterReset;
+        this.afterSubmit = afterSubmit;
+        this.afterValidate = afterValidate;
+        this.beforeSubmit = beforeSubmit;
+        this.formErrors = (0, object_from_keys_1.cloneObjectWithDefaultValue)(this.formValues, () => []);
+        this.formValidators = (0, object_from_keys_1.cloneObjectWithDefaultValue)(this.formValues, (key) => {
             var _a;
             const validator = new field_validator_1.FormFieldValidator();
             (_a = validators === null || validators === void 0 ? void 0 : validators[key]) === null || _a === void 0 ? void 0 : _a.call(validators, validator);

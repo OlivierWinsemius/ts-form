@@ -1,1 +1,1 @@
-export declare const objectFromKeys: <O extends Record<string, unknown>, V>(originalObject: O, getValue: (key: keyof O) => V) => Record<keyof O, V>;
+export declare const cloneObjectWithDefaultValue: <Original extends Record<string, unknown>, Key extends keyof Original, Value>(originalObject: Original, getDefaultValue: (key: Key) => Value) => Record<Key, Value>;

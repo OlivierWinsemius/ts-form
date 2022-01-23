@@ -1,29 +1,35 @@
 import { Form } from "./form";
 import { FieldValidator, FormFieldValidator } from "./field-validator";
-declare type FormValue<V = unknown> = V;
-export declare type FormValues = Record<string, FormValue>;
-export declare type FormValidators<V extends FormValues> = {
-    [field in keyof V]: FormFieldValidator<V>;
+declare type FormValue<Value = unknown> = Value;
+export declare type FormValues = {
+    [key: string]: FormValue;
 };
-export declare type FormSubmit<V extends FormValues> = (values: V, form: Form<V>) => void | Promise<void>;
-export declare type FormErrors<V extends FormValues> = {
-    [field in keyof V]: string[];
+export declare type FormValidators<Values extends FormValues> = {
+    [field in keyof Values]: FormFieldValidator<Values>;
 };
-export declare type Validator<V extends FormValues, F extends keyof V> = (fieldValue: V[F], values: V) => Promise<string | undefined> | string | undefined;
+export declare type FormSubmit<Values extends FormValues> = (values: Values, form: Form<Values>) => void | Promise<void>;
+export declare type FormErrors<Values extends FormValues> = {
+    [field in keyof Values]: string[];
+};
+export declare type Validator<Values extends FormValues, Field extends keyof Values> = (fieldValue: Values[Field], values: Values) => Promise<string | undefined> | string | undefined;
 export declare type GenericValidator = Validator<FormValues, keyof FormValues>;
-export declare type ValidatorCreator<V extends FormValues> = {
-    [field in keyof V]?: (validator: FieldValidator<V>) => FieldValidator<V>;
+export declare type ValidatorCreator<Values extends FormValues> = {
+    [field in keyof Values]?: (validator: FieldValidator<Values>) => FieldValidator<Values>;
 };
-export interface FormProperties<V extends FormValues> {
-    values: V;
-    onSubmit: FormSubmit<V>;
-    validators?: ValidatorCreator<V>;
+export interface FormProperties<Values extends FormValues> {
+    values: Values;
+    onSubmit: FormSubmit<Values>;
+    validators?: ValidatorCreator<Values>;
+    afterReset?: (form: Form<Values>) => void;
+    beforeSubmit?: (form: Form<Values>) => void;
+    afterSubmit?: (form: Form<Values>) => void;
+    afterValidate?: (field: keyof Values, form: Form<Values>) => void;
 }
-export interface FormField<V> {
+export interface FormField<Values> {
     readonly errors: string[];
     readonly isValid: boolean;
     readonly isTouched: boolean;
-    readonly value: V;
-    setValue(value: V): Promise<void>;
+    readonly value: Values;
+    setValue(value: Values): Promise<void>;
 }
 export {};

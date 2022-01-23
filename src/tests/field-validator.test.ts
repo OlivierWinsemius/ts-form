@@ -4,7 +4,9 @@ import { FormValues } from "../types";
 describe("FieldValidator", () => {
   type Test = [
     unknown,
-    <V extends FormValues>(validator: FieldValidator<V>) => FieldValidator<V>,
+    <Values extends FormValues>(
+      validator: FieldValidator<Values>
+    ) => FieldValidator<Values>,
     string[]
   ];
 

@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.objectFromKeys = void 0;
-const objectFromKeys = (originalObject, getValue) => {
+exports.cloneObjectWithDefaultValue = void 0;
+const cloneObjectWithDefaultValue = (originalObject, getDefaultValue) => {
     const keys = Object.keys(originalObject);
-    const entries = new Map(keys.map((key) => [key, getValue(key)]));
+    const entries = new Map(keys.map((key) => [key, getDefaultValue(key)]));
     return Object.fromEntries(entries);
 };
-exports.objectFromKeys = objectFromKeys;
+exports.cloneObjectWithDefaultValue = cloneObjectWithDefaultValue;

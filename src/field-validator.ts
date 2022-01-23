@@ -15,12 +15,12 @@ import {
   emailValidator,
 } from "./validators";
 
-export class FieldValidator<V extends FormValues> {
+export class FieldValidator<Values extends FormValues> {
   protected allowUndefined = false;
   protected allowNull = false;
-  protected validators: Validator<V, keyof V>[] = [];
+  protected validators: Validator<Values, keyof Values>[] = [];
 
-  custom = (validator: Validator<V, keyof V>) => {
+  custom = (validator: Validator<Values, keyof Values>) => {
     this.validators.push(validator);
     return this;
   };
@@ -75,7 +75,7 @@ export class FieldValidator<V extends FormValues> {
     return this;
   };
 
-  oneOf = (...validators: (() => FieldValidator<V>)[]) => {
+  oneOf = (...validators: (() => FieldValidator<Values>)[]) => {
     validators.forEach((v) => v());
 
     const validations = this.validators.splice(
@@ -100,9 +100,11 @@ export class FieldValidator<V extends FormValues> {
 }
 
 export class FormFieldValidator<
-  V extends FormValues
-> extends FieldValidator<V> {
-  private shouldValidate = <F extends keyof V>(value: V[F]) => {
+  Values extends FormValues
+> extends FieldValidator<Values> {
+  private shouldValidate = <Field extends keyof Values>(
+    value: Values[Field]
+  ) => {
     if (value === undefined) {
       return !this.allowUndefined;
     }
@@ -128,9 +130,9 @@ export class FormFieldValidator<
     return [...errorSet];
   };
 
-  private getValidationErrors = async <F extends keyof V>(
-    value: V[F],
-    formValues: V
+  private getValidationErrors = async <Field extends keyof Values>(
+    value: Values[Field],
+    formValues: Values
   ) => {
     const validationPromises = this.validators.map((v) => v(value, formValues));
     const validationMessages = await Promise.all(validationPromises);
@@ -139,9 +141,9 @@ export class FormFieldValidator<
     return this.cleanupErrors(messages);
   };
 
-  validate = <F extends keyof V>(
-    formValues: V,
-    fieldName: F
+  validate = <Field extends keyof Values>(
+    formValues: Values,
+    fieldName: Field
   ): Promise<string[]> => {
     const value = formValues[fieldName];
 

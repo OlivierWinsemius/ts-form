@@ -76,7 +76,9 @@ export const emailValidator: GenericValidator = (fieldValue, formValues) => {
 };
 
 export const oneOf =
-  <V extends GenericValidator>(...validators: V[]): GenericValidator =>
+  <Validator extends GenericValidator>(
+    ...validators: Validator[]
+  ): GenericValidator =>
   async (fieldValue, formValues) => {
     const messages: string[] = [];
 

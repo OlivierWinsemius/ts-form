@@ -1,30 +1,30 @@
 import { FormValues, FormSubmit, FormProperties, FormErrors, FormValidators, FormField } from "./types";
-export declare class Form<V extends FormValues> {
-    protected onSubmit: FormSubmit<V>;
-    protected fieldNames: (keyof V)[];
-    protected formErrors: FormErrors<V>;
-    protected formValidators: FormValidators<V>;
-    protected formValues: V;
-    protected initialFormValues: V;
+export declare class Form<Values extends FormValues> {
+    protected onSubmit: FormSubmit<Values>;
+    protected fieldNames: (keyof Values)[];
+    protected formErrors: FormErrors<Values>;
+    protected formValidators: FormValidators<Values>;
+    protected formValues: Values;
+    protected initialFormValues: Values;
     protected isFormSubmitting: boolean;
     protected afterReset: (form: this) => void;
     protected beforeSubmit: (form: this) => void;
     protected afterSubmit: (form: this) => void;
-    protected afterValidate: (field: keyof V, form: this) => void;
-    protected getFieldValue: <F extends keyof V>(field: F) => V[F];
-    protected getFieldErrors: <F extends keyof V>(field: F) => FormErrors<V>[F];
-    protected getIsFieldTouched: <F extends keyof V>(field: F) => boolean;
+    protected afterValidate: (field: keyof Values, form: this) => void;
+    protected getFieldValue: <Field extends keyof Values>(field: Field) => Values[Field];
+    protected getFieldErrors: <Field extends keyof Values>(field: Field) => FormErrors<Values>[Field];
+    protected getIsFieldTouched: <Field extends keyof Values>(field: Field) => boolean;
     protected getIsSubmitting: () => boolean;
     protected getIsTouched: () => boolean;
     protected getIsValid: () => boolean;
-    protected validateField: <F extends keyof V>(field: F) => Promise<void>;
+    protected validateField: <Field extends keyof Values>(field: Field) => Promise<void>;
     protected validateAllFields: () => Promise<boolean>;
-    protected setFieldValue: <F extends keyof V>(field: F, value: V[F]) => Promise<void>;
-    constructor({ values, onSubmit, validators }: FormProperties<V>);
+    protected setFieldValue: <Field extends keyof Values>(field: Field, value: Values[Field]) => Promise<void>;
+    constructor({ values, onSubmit, validators, afterReset, afterSubmit, afterValidate, beforeSubmit, }: FormProperties<Values>);
     get isValid(): boolean;
     get isTouched(): boolean;
     get isSubmitting(): boolean;
-    getField: <F extends keyof V>(field: F) => FormField<V[F]>;
+    getField: <Field extends keyof Values>(field: Field) => FormField<Values[Field]>;
     submit: () => Promise<void>;
     reset: () => Promise<void>;
 }
