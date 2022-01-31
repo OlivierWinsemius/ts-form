@@ -1,5 +1,5 @@
 import { FormField, FormErrors, FormSubmit, FormValues, FormProperties, FormValidators, FormSubmitState, FormEvents } from "./types";
-declare abstract class BaseForm<Values extends FormValues> {
+export declare class Form<Values extends FormValues> {
     protected fieldNames: (keyof Values)[];
     protected formValues: Values;
     protected initialFormValues: Values;
@@ -9,8 +9,6 @@ declare abstract class BaseForm<Values extends FormValues> {
     protected formSubmitState: FormSubmitState;
     protected formValidators: FormValidators<Values>;
     constructor({ values, onSubmit, validators, events, }: FormProperties<Values>);
-}
-export declare class Form<Values extends FormValues> extends BaseForm<Values> {
     protected getFieldValue: <Field extends keyof Values>(field: Field) => Values[Field];
     protected getFieldErrors: <Field extends keyof Values>(field: Field) => FormErrors<Values>[Field];
     protected getIsFieldTouched: <Field extends keyof Values>(field: Field) => boolean;
@@ -29,4 +27,3 @@ export declare class Form<Values extends FormValues> extends BaseForm<Values> {
     submit: () => Promise<void>;
     reset: () => Promise<void>;
 }
-export {};

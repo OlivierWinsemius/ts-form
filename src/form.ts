@@ -12,11 +12,9 @@ import { FormError } from "./form-error";
 import { FormFieldValidator } from "./field-validator";
 import { cloneObjectWithDefaultValue } from "./clone-object";
 
-const emptyEvent = () => {
-  return undefined;
-};
+const emptyEvent = () => undefined;
 
-abstract class BaseForm<Values extends FormValues> {
+export class Form<Values extends FormValues> {
   protected fieldNames: (keyof Values)[];
   protected formValues: Values;
   protected initialFormValues: Values;
@@ -60,10 +58,10 @@ abstract class BaseForm<Values extends FormValues> {
         return validator;
       }
     );
-  }
-}
 
-export class Form<Values extends FormValues> extends BaseForm<Values> {
+    this.reset();
+  }
+
   protected getFieldValue = <Field extends keyof Values>(field: Field) => {
     return this.formValues[field];
   };

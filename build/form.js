@@ -13,34 +13,9 @@ exports.Form = void 0;
 const form_error_1 = require("./form-error");
 const field_validator_1 = require("./field-validator");
 const clone_object_1 = require("./clone-object");
-const emptyEvent = () => {
-    return undefined;
-};
-class BaseForm {
+const emptyEvent = () => undefined;
+class Form {
     constructor({ values, onSubmit, validators, events, }) {
-        this.initialFormValues = Object.assign({}, values);
-        this.formValues = Object.assign({}, values);
-        this.fieldNames = Object.keys(values);
-        this.formSubmitState = {};
-        this.formEvents = events !== null && events !== void 0 ? events : {
-            afterReset: emptyEvent,
-            beforeSubmit: emptyEvent,
-            afterSubmit: emptyEvent,
-            afterValidate: emptyEvent,
-        };
-        this.onSubmit = onSubmit;
-        this.formErrors = (0, clone_object_1.cloneObjectWithDefaultValue)(this.formValues, () => []);
-        this.formValidators = (0, clone_object_1.cloneObjectWithDefaultValue)(this.formValues, (key) => {
-            var _a;
-            const validator = new field_validator_1.FormFieldValidator();
-            (_a = validators === null || validators === void 0 ? void 0 : validators[key]) === null || _a === void 0 ? void 0 : _a.call(validators, validator);
-            return validator;
-        });
-    }
-}
-class Form extends BaseForm {
-    constructor() {
-        super(...arguments);
         this.getFieldValue = (field) => {
             return this.formValues[field];
         };
@@ -129,6 +104,25 @@ class Form extends BaseForm {
             yield this.validateAllFields();
             this.formEvents.afterReset(this);
         });
+        this.initialFormValues = Object.assign({}, values);
+        this.formValues = Object.assign({}, values);
+        this.fieldNames = Object.keys(values);
+        this.formSubmitState = {};
+        this.formEvents = events !== null && events !== void 0 ? events : {
+            afterReset: emptyEvent,
+            beforeSubmit: emptyEvent,
+            afterSubmit: emptyEvent,
+            afterValidate: emptyEvent,
+        };
+        this.onSubmit = onSubmit;
+        this.formErrors = (0, clone_object_1.cloneObjectWithDefaultValue)(this.formValues, () => []);
+        this.formValidators = (0, clone_object_1.cloneObjectWithDefaultValue)(this.formValues, (key) => {
+            var _a;
+            const validator = new field_validator_1.FormFieldValidator();
+            (_a = validators === null || validators === void 0 ? void 0 : validators[key]) === null || _a === void 0 ? void 0 : _a.call(validators, validator);
+            return validator;
+        });
+        this.reset();
     }
     get isValid() {
         return this.getIsValid();
