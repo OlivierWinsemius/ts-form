@@ -7,6 +7,7 @@ export declare class Form<Values extends FormValues> {
     protected formValues: Values;
     protected initialFormValues: Values;
     protected isFormSubmitting: boolean;
+    protected isFormSubmitted: boolean;
     protected afterReset: (form: this) => void;
     protected beforeSubmit: (form: this) => void;
     protected afterSubmit: (form: this) => void;
@@ -15,6 +16,7 @@ export declare class Form<Values extends FormValues> {
     protected getFieldErrors: <Field extends keyof Values>(field: Field) => FormErrors<Values>[Field];
     protected getIsFieldTouched: <Field extends keyof Values>(field: Field) => boolean;
     protected getIsSubmitting: () => boolean;
+    protected getIsSubmitted: () => boolean;
     protected getIsTouched: () => boolean;
     protected getIsValid: () => boolean;
     protected validateField: <Field extends keyof Values>(field: Field) => Promise<void>;
@@ -24,6 +26,7 @@ export declare class Form<Values extends FormValues> {
     get isValid(): boolean;
     get isTouched(): boolean;
     get isSubmitting(): boolean;
+    get isSubmitted(): boolean;
     getField: <Field extends keyof Values>(field: Field) => FormField<Values[Field]>;
     submit: () => Promise<void>;
     reset: () => Promise<void>;

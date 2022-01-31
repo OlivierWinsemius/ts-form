@@ -16,6 +16,7 @@ const object_from_keys_1 = require("./object-from-keys");
 class Form {
     constructor({ values, onSubmit, validators, afterReset = () => undefined, afterSubmit = () => undefined, afterValidate = () => undefined, beforeSubmit = () => undefined, }) {
         this.isFormSubmitting = false;
+        this.isFormSubmitted = false;
         this.getFieldValue = (field) => {
             return this.formValues[field];
         };
@@ -27,6 +28,9 @@ class Form {
         };
         this.getIsSubmitting = () => {
             return this.isFormSubmitting;
+        };
+        this.getIsSubmitted = () => {
+            return this.isFormSubmitted;
         };
         this.getIsTouched = () => {
             const { fieldNames, getIsFieldTouched } = this;
@@ -84,6 +88,7 @@ class Form {
             if (isFormSubmitting) {
                 return;
             }
+            this.isFormSubmitted = false;
             this.isFormSubmitting = true;
             this.beforeSubmit(this);
             try {
@@ -92,6 +97,7 @@ class Form {
                     throw new form_error_1.FormError(this.formErrors);
                 }
                 yield onSubmit(formValues, this);
+                this.isFormSubmitted = true;
             }
             finally {
                 this.isFormSubmitting = false;
@@ -100,6 +106,8 @@ class Form {
         });
         this.reset = () => __awaiter(this, void 0, void 0, function* () {
             this.formValues = Object.assign({}, this.initialFormValues);
+            this.isFormSubmitting = false;
+            this.isFormSubmitted = false;
             yield this.validateAllFields();
             this.afterReset(this);
         });
@@ -128,6 +136,9 @@ class Form {
     }
     get isSubmitting() {
         return this.getIsSubmitting();
+    }
+    get isSubmitted() {
+        return this.getIsSubmitted();
     }
 }
 exports.Form = Form;

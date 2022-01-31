@@ -34,10 +34,12 @@ describe("form", () => {
     const field = form.getField("value");
     const submit = form.submit();
     expect(form.isSubmitting).toStrictEqual(true);
+    expect(form.isSubmitted).toStrictEqual(false);
     await field.setValue(2);
     await submit;
     expect(field.value).toStrictEqual(1);
     expect(form.isSubmitting).toStrictEqual(false);
+    expect(form.isSubmitted).toStrictEqual(true);
   });
 
   it("submitting while sumbitting does nothing", async () => {

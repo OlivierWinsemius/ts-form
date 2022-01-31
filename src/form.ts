@@ -18,6 +18,7 @@ export class Form<Values extends FormValues> {
   protected formValues: Values;
   protected initialFormValues: Values;
   protected isFormSubmitting = false;
+  protected isFormSubmitted = false;
 
   protected afterReset: (form: this) => void;
   protected beforeSubmit: (form: this) => void;
@@ -38,6 +39,10 @@ export class Form<Values extends FormValues> {
 
   protected getIsSubmitting = () => {
     return this.isFormSubmitting;
+  };
+
+  protected getIsSubmitted = () => {
+    return this.isFormSubmitted;
   };
 
   protected getIsTouched = () => {
@@ -128,6 +133,10 @@ export class Form<Values extends FormValues> {
     return this.getIsSubmitting();
   }
 
+  get isSubmitted() {
+    return this.getIsSubmitted();
+  }
+
   getField = <Field extends keyof Values>(
     field: Field
   ): FormField<Values[Field]> => {
@@ -166,6 +175,7 @@ export class Form<Values extends FormValues> {
       return;
     }
 
+    this.isFormSubmitted = false;
     this.isFormSubmitting = true;
     this.beforeSubmit(this);
 
@@ -176,6 +186,7 @@ export class Form<Values extends FormValues> {
       }
 
       await onSubmit(formValues, this);
+      this.isFormSubmitted = true;
     } finally {
       this.isFormSubmitting = false;
       afterSubmit(this);
@@ -184,6 +195,8 @@ export class Form<Values extends FormValues> {
 
   reset = async () => {
     this.formValues = { ...this.initialFormValues };
+    this.isFormSubmitting = false;
+    this.isFormSubmitted = false;
     await this.validateAllFields();
     this.afterReset(this);
   };
