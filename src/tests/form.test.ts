@@ -75,13 +75,63 @@ describe("form", () => {
       values: { value: 1 },
       validators: { value: (v) => v.string() },
     });
-
     const field = form.getField("value");
     await field.setValue(1);
-
     expect(field.errors).toStrictEqual(["invalid_type_string"]);
     await expect(form.submit()).rejects.toThrowError(
       "value:\n\t- invalid_type_string"
     );
+  });
+
+  it("custom formEvents", async () => {
+    const afterReset = jest.fn();
+    const beforeSubmit = jest.fn();
+    const afterSubmit = jest.fn();
+    const afterValidate = jest.fn();
+    const form = new Form({
+      onSubmit,
+      values: { value: 1 },
+      events: {
+        afterReset,
+        beforeSubmit,
+        afterSubmit,
+        afterValidate,
+      },
+    });
+
+    await new Promise((res) => setTimeout(res, 0));
+
+    expect(afterReset).toBeCalled();
+    expect(beforeSubmit).not.toBeCalled();
+    expect(afterSubmit).not.toBeCalled();
+    expect(afterValidate).not.toBeCalled();
+
+    jest.resetAllMocks();
+    await form.getField("value").setValue(1);
+
+    expect(afterValidate).toBeCalled();
+    expect(afterReset).not.toBeCalled();
+    expect(beforeSubmit).not.toBeCalled();
+    expect(afterSubmit).not.toBeCalled();
+
+    jest.resetAllMocks();
+    const submit = form.submit();
+
+    expect(beforeSubmit).toBeCalled();
+    expect(afterSubmit).not.toBeCalled();
+
+    await submit;
+
+    expect(afterSubmit).toBeCalled();
+    expect(afterReset).not.toBeCalled();
+    expect(afterValidate).not.toBeCalled();
+
+    jest.resetAllMocks();
+    await form.reset();
+
+    expect(afterReset).toBeCalled();
+    expect(afterValidate).not.toBeCalled();
+    expect(beforeSubmit).not.toBeCalled();
+    expect(afterSubmit).not.toBeCalled();
   });
 });

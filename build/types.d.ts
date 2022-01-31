@@ -7,7 +7,17 @@ export declare type FormValues = {
 export declare type FormValidators<Values extends FormValues> = {
     [field in keyof Values]: FormFieldValidator<Values>;
 };
-export declare type FormSubmit<Values extends FormValues> = (values: Values, form: Form<Values>) => void | Promise<void>;
+export declare type FormSubmit<Values extends FormValues> = <ReturnValue>(values: Values, form: Form<Values>) => ReturnValue | Promise<ReturnValue>;
+export interface FormSubmitState {
+    isSubmitted?: boolean;
+    isSubmitting?: boolean;
+}
+export interface FormEvents<Values extends FormValues> {
+    afterReset: (form: Form<Values>) => void;
+    beforeSubmit: (form: Form<Values>) => void;
+    afterSubmit: (form: Form<Values>) => void;
+    afterValidate: (field: keyof Values, form: Form<Values>) => void;
+}
 export declare type FormErrors<Values extends FormValues> = {
     [field in keyof Values]: string[];
 };
@@ -20,10 +30,7 @@ export interface FormProperties<Values extends FormValues> {
     values: Values;
     onSubmit: FormSubmit<Values>;
     validators?: ValidatorCreator<Values>;
-    afterReset?: (form: Form<Values>) => void;
-    beforeSubmit?: (form: Form<Values>) => void;
-    afterSubmit?: (form: Form<Values>) => void;
-    afterValidate?: (field: keyof Values, form: Form<Values>) => void;
+    events?: FormEvents<Values>;
 }
 export interface FormField<Values> {
     readonly errors: string[];

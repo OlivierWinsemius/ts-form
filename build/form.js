@@ -12,11 +12,35 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Form = void 0;
 const form_error_1 = require("./form-error");
 const field_validator_1 = require("./field-validator");
-const object_from_keys_1 = require("./object-from-keys");
-class Form {
-    constructor({ values, onSubmit, validators, afterReset = () => undefined, afterSubmit = () => undefined, afterValidate = () => undefined, beforeSubmit = () => undefined, }) {
-        this.isFormSubmitting = false;
-        this.isFormSubmitted = false;
+const clone_object_1 = require("./clone-object");
+const emptyEvent = () => {
+    return undefined;
+};
+class BaseForm {
+    constructor({ values, onSubmit, validators, events, }) {
+        this.initialFormValues = Object.assign({}, values);
+        this.formValues = Object.assign({}, values);
+        this.fieldNames = Object.keys(values);
+        this.formSubmitState = {};
+        this.formEvents = events !== null && events !== void 0 ? events : {
+            afterReset: emptyEvent,
+            beforeSubmit: emptyEvent,
+            afterSubmit: emptyEvent,
+            afterValidate: emptyEvent,
+        };
+        this.onSubmit = onSubmit;
+        this.formErrors = (0, clone_object_1.cloneObjectWithDefaultValue)(this.formValues, () => []);
+        this.formValidators = (0, clone_object_1.cloneObjectWithDefaultValue)(this.formValues, (key) => {
+            var _a;
+            const validator = new field_validator_1.FormFieldValidator();
+            (_a = validators === null || validators === void 0 ? void 0 : validators[key]) === null || _a === void 0 ? void 0 : _a.call(validators, validator);
+            return validator;
+        });
+    }
+}
+class Form extends BaseForm {
+    constructor() {
+        super(...arguments);
         this.getFieldValue = (field) => {
             return this.formValues[field];
         };
@@ -27,37 +51,34 @@ class Form {
             return this.formValues[field] !== this.initialFormValues[field];
         };
         this.getIsSubmitting = () => {
-            return this.isFormSubmitting;
+            return this.formSubmitState.isSubmitting;
         };
         this.getIsSubmitted = () => {
-            return this.isFormSubmitted;
+            return this.formSubmitState.isSubmitted;
         };
         this.getIsTouched = () => {
-            const { fieldNames, getIsFieldTouched } = this;
-            return !!fieldNames.find((field) => getIsFieldTouched(field));
+            return !!this.fieldNames.find((field) => this.getIsFieldTouched(field));
         };
         this.getIsValid = () => {
             return Object.values(this.formErrors).flat().length === 0;
         };
         this.validateField = (field) => __awaiter(this, void 0, void 0, function* () {
-            const { formValues, formValidators } = this;
-            const { validate } = formValidators[field];
-            this.formErrors[field] = yield validate(formValues, field);
-            this.afterValidate(field, this);
+            const { validate } = this.formValidators[field];
+            this.formErrors[field] = yield validate(this.formValues, field);
+            this.formEvents.afterValidate(field, this);
         });
         this.validateAllFields = () => __awaiter(this, void 0, void 0, function* () {
-            const { formValues, formValidators, fieldNames } = this;
             let isInvalid = false;
-            for (const field of fieldNames) {
-                const { validate } = formValidators[field];
-                const errors = yield validate(formValues, field);
+            for (const field of this.fieldNames) {
+                const { validate } = this.formValidators[field];
+                const errors = yield validate(this.formValues, field);
                 this.formErrors[field] = errors;
                 isInvalid = isInvalid || errors.length > 0;
             }
             return !isInvalid;
         });
         this.setFieldValue = (field, value) => {
-            if (this.isFormSubmitting) {
+            if (this.formSubmitState.isSubmitting) {
                 return Promise.resolve();
             }
             this.formValues[field] = value;
@@ -84,49 +105,30 @@ class Form {
             };
         };
         this.submit = () => __awaiter(this, void 0, void 0, function* () {
-            const { validateAllFields, onSubmit, afterSubmit, formValues, isFormSubmitting, } = this;
-            if (isFormSubmitting) {
+            if (this.formSubmitState.isSubmitting) {
                 return;
             }
-            this.isFormSubmitted = false;
-            this.isFormSubmitting = true;
-            this.beforeSubmit(this);
+            this.formSubmitState = { isSubmitted: false, isSubmitting: true };
+            this.formEvents.beforeSubmit(this);
             try {
-                const isValid = yield validateAllFields();
+                const isValid = yield this.validateAllFields();
                 if (!isValid) {
                     throw new form_error_1.FormError(this.formErrors);
                 }
-                yield onSubmit(formValues, this);
-                this.isFormSubmitted = true;
+                yield this.onSubmit(this.formValues, this);
+                this.formSubmitState.isSubmitted = true;
             }
             finally {
-                this.isFormSubmitting = false;
-                afterSubmit(this);
+                this.formSubmitState.isSubmitting = false;
+                this.formEvents.afterSubmit(this);
             }
         });
         this.reset = () => __awaiter(this, void 0, void 0, function* () {
             this.formValues = Object.assign({}, this.initialFormValues);
-            this.isFormSubmitting = false;
-            this.isFormSubmitted = false;
+            this.formSubmitState = {};
             yield this.validateAllFields();
-            this.afterReset(this);
+            this.formEvents.afterReset(this);
         });
-        this.initialFormValues = Object.assign({}, values);
-        this.formValues = Object.assign({}, values);
-        this.fieldNames = Object.keys(values);
-        this.onSubmit = onSubmit;
-        this.afterReset = afterReset;
-        this.afterSubmit = afterSubmit;
-        this.afterValidate = afterValidate;
-        this.beforeSubmit = beforeSubmit;
-        this.formErrors = (0, object_from_keys_1.cloneObjectWithDefaultValue)(this.formValues, () => []);
-        this.formValidators = (0, object_from_keys_1.cloneObjectWithDefaultValue)(this.formValues, (key) => {
-            var _a;
-            const validator = new field_validator_1.FormFieldValidator();
-            (_a = validators === null || validators === void 0 ? void 0 : validators[key]) === null || _a === void 0 ? void 0 : _a.call(validators, validator);
-            return validator;
-        });
-        this.reset();
     }
     get isValid() {
         return this.getIsValid();
