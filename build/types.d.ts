@@ -7,7 +7,7 @@ export declare type FormValues = {
 export declare type FormValidators<Values extends FormValues> = {
     [field in keyof Values]: FormFieldValidator<Values>;
 };
-export declare type FormSubmit<Values extends FormValues> = <ReturnValue>(values: Values, form: Form<Values>) => ReturnValue | Promise<ReturnValue>;
+export declare type FormSubmit<Values extends FormValues, ReturnValue = unknown> = (values: Values, form: Form<Values>) => ReturnValue;
 export interface FormSubmitState {
     isSubmitted?: boolean;
     isSubmitting?: boolean;

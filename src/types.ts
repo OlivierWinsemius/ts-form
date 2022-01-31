@@ -11,10 +11,10 @@ export type FormValidators<Values extends FormValues> = {
   [field in keyof Values]: FormFieldValidator<Values>;
 };
 
-export type FormSubmit<Values extends FormValues> = <ReturnValue>(
+export type FormSubmit<Values extends FormValues, ReturnValue = unknown> = (
   values: Values,
   form: Form<Values>
-) => ReturnValue | Promise<ReturnValue>;
+) => ReturnValue;
 
 export interface FormSubmitState {
   isSubmitted?: boolean;
