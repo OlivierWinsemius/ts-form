@@ -1,13 +1,13 @@
 import { Form } from "./form";
 import { FieldValidator, FormFieldValidator } from "./field-validator";
-declare type FormValue<Value = unknown> = Value;
-export declare type FormValues = {
+type FormValue<Value = unknown> = Value;
+export type FormValues = {
     [key: string]: FormValue;
 };
-export declare type FormValidators<Values extends FormValues> = {
+export type FormValidators<Values extends FormValues> = {
     [field in keyof Values]: FormFieldValidator<Values>;
 };
-export declare type FormSubmit<Values extends FormValues, ReturnValue = unknown> = (values: Values, form: Form<Values>) => ReturnValue;
+export type FormSubmit<Values extends FormValues, ReturnValue = unknown> = (values: Values, form: Form<Values>) => ReturnValue;
 export interface FormSubmitState {
     isSubmitted?: boolean;
     isSubmitting?: boolean;
@@ -18,12 +18,12 @@ export interface FormEvents<Values extends FormValues> {
     afterSubmit: (form: Form<Values>) => void;
     afterValidate: (field: keyof Values, form: Form<Values>) => void;
 }
-export declare type FormErrors<Values extends FormValues> = {
+export type FormErrors<Values extends FormValues> = {
     [field in keyof Values]: string[];
 };
-export declare type Validator<Values extends FormValues, Field extends keyof Values> = (fieldValue: Values[Field], values: Values) => Promise<string | undefined> | string | undefined;
-export declare type GenericValidator = Validator<FormValues, keyof FormValues>;
-export declare type ValidatorCreator<Values extends FormValues> = {
+export type Validator<Values extends FormValues, Field extends keyof Values> = (fieldValue: Values[Field], values: Values) => Promise<string | undefined> | string | undefined;
+export type GenericValidator = Validator<FormValues, keyof FormValues>;
+export type ValidatorCreator<Values extends FormValues> = {
     [field in keyof Values]?: (validator: FieldValidator<Values>) => FieldValidator<Values>;
 };
 export interface FormProperties<Values extends FormValues> {

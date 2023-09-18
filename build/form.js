@@ -1,13 +1,4 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Form = void 0;
 const form_error_1 = require("./form-error");
@@ -37,21 +28,21 @@ class Form {
         this.getIsValid = () => {
             return Object.values(this.formErrors).flat().length === 0;
         };
-        this.validateField = (field) => __awaiter(this, void 0, void 0, function* () {
+        this.validateField = async (field) => {
             const { validate } = this.formValidators[field];
-            this.formErrors[field] = yield validate(this.formValues, field);
+            this.formErrors[field] = await validate(this.formValues, field);
             this.formEvents.afterValidate(field, this);
-        });
-        this.validateAllFields = () => __awaiter(this, void 0, void 0, function* () {
+        };
+        this.validateAllFields = async () => {
             let isInvalid = false;
             for (const field of this.fieldNames) {
                 const { validate } = this.formValidators[field];
-                const errors = yield validate(this.formValues, field);
+                const errors = await validate(this.formValues, field);
                 this.formErrors[field] = errors;
                 isInvalid = isInvalid || errors.length > 0;
             }
             return !isInvalid;
-        });
+        };
         this.setFieldValue = (field, value) => {
             if (this.formSubmitState.isSubmitting) {
                 return Promise.resolve();
@@ -79,33 +70,33 @@ class Form {
                 },
             };
         };
-        this.submit = () => __awaiter(this, void 0, void 0, function* () {
+        this.submit = async () => {
             if (this.formSubmitState.isSubmitting) {
                 return;
             }
             this.formSubmitState = { isSubmitted: false, isSubmitting: true };
             this.formEvents.beforeSubmit(this);
             try {
-                const isValid = yield this.validateAllFields();
+                const isValid = await this.validateAllFields();
                 if (!isValid) {
                     throw new form_error_1.FormError(this.formErrors);
                 }
-                yield this.onSubmit(this.formValues, this);
+                await this.onSubmit(this.formValues, this);
                 this.formSubmitState.isSubmitted = true;
             }
             finally {
                 this.formSubmitState.isSubmitting = false;
                 this.formEvents.afterSubmit(this);
             }
-        });
-        this.reset = () => __awaiter(this, void 0, void 0, function* () {
-            this.formValues = Object.assign({}, this.initialFormValues);
+        };
+        this.reset = async () => {
+            this.formValues = { ...this.initialFormValues };
             this.formSubmitState = {};
-            yield this.validateAllFields();
+            await this.validateAllFields();
             this.formEvents.afterReset(this);
-        });
-        this.initialFormValues = Object.assign({}, values);
-        this.formValues = Object.assign({}, values);
+        };
+        this.initialFormValues = { ...values };
+        this.formValues = { ...values };
         this.fieldNames = Object.keys(values);
         this.formSubmitState = {};
         this.formEvents = events !== null && events !== void 0 ? events : {

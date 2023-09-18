@@ -1,13 +1,4 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.oneOf = exports.emailValidator = exports.maxDateValidator = exports.minDateValidator = exports.maxNumberValidator = exports.minNumberValidator = exports.dateValidator = exports.nullValidator = exports.undefinedValidator = exports.booleanValidator = exports.numberValidator = exports.stringValidator = exports.truthyValidator = void 0;
 const truthyValidator = (fieldValue) => !fieldValue ? "invalid_value_truthy" : undefined;
@@ -56,15 +47,15 @@ const emailValidator = (fieldValue, formValues) => {
         : undefined;
 };
 exports.emailValidator = emailValidator;
-const oneOf = (...validators) => (fieldValue, formValues) => __awaiter(void 0, void 0, void 0, function* () {
+const oneOf = (...validators) => async (fieldValue, formValues) => {
     const messages = [];
     for (const validator of validators) {
-        const validatorMessage = yield validator(fieldValue, formValues);
+        const validatorMessage = await validator(fieldValue, formValues);
         if (!validatorMessage) {
             return;
         }
         messages.push(validatorMessage);
     }
     return messages.join(" / ");
-});
+};
 exports.oneOf = oneOf;

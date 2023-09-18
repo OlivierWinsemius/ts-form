@@ -2,7 +2,8 @@
   "include": ["src"],
   "compilerOptions": {
     "module": "commonjs",
-    "target": "ES2015",
+    "lib": ["ES2019", "DOM"],
+    "target": "ES2019",
     "outDir": "dist",
     "strict": true,
     "esModuleInterop": true,

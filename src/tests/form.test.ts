@@ -49,7 +49,7 @@ describe("form", () => {
     await form.submit();
     await form.submit();
     await submit;
-    expect(onSubmit).toBeCalledTimes(1);
+    expect(onSubmit).toHaveBeenCalledTimes(1);
   });
 
   it("isValid", async () => {
@@ -78,7 +78,7 @@ describe("form", () => {
     const field = form.getField("value");
     await field.setValue(1);
     expect(field.errors).toStrictEqual(["invalid_type_string"]);
-    await expect(form.submit()).rejects.toThrowError(
+    await expect(form.submit()).rejects.toThrow(
       "value:\n\t- invalid_type_string"
     );
   });
@@ -101,37 +101,37 @@ describe("form", () => {
 
     await new Promise((res) => setTimeout(res, 0));
 
-    expect(afterReset).toBeCalled();
-    expect(beforeSubmit).not.toBeCalled();
-    expect(afterSubmit).not.toBeCalled();
-    expect(afterValidate).not.toBeCalled();
+    expect(afterReset).toHaveBeenCalled();
+    expect(beforeSubmit).not.toHaveBeenCalled();
+    expect(afterSubmit).not.toHaveBeenCalled();
+    expect(afterValidate).not.toHaveBeenCalled();
 
     jest.resetAllMocks();
     await form.getField("value").setValue(1);
 
-    expect(afterValidate).toBeCalled();
-    expect(afterReset).not.toBeCalled();
-    expect(beforeSubmit).not.toBeCalled();
-    expect(afterSubmit).not.toBeCalled();
+    expect(afterValidate).toHaveBeenCalled();
+    expect(afterReset).not.toHaveBeenCalled();
+    expect(beforeSubmit).not.toHaveBeenCalled();
+    expect(afterSubmit).not.toHaveBeenCalled();
 
     jest.resetAllMocks();
     const submit = form.submit();
 
-    expect(beforeSubmit).toBeCalled();
-    expect(afterSubmit).not.toBeCalled();
+    expect(beforeSubmit).toHaveBeenCalled();
+    expect(afterSubmit).not.toHaveBeenCalled();
 
     await submit;
 
-    expect(afterSubmit).toBeCalled();
-    expect(afterReset).not.toBeCalled();
-    expect(afterValidate).not.toBeCalled();
+    expect(afterSubmit).toHaveBeenCalled();
+    expect(afterReset).not.toHaveBeenCalled();
+    expect(afterValidate).not.toHaveBeenCalled();
 
     jest.resetAllMocks();
     await form.reset();
 
-    expect(afterReset).toBeCalled();
-    expect(afterValidate).not.toBeCalled();
-    expect(beforeSubmit).not.toBeCalled();
-    expect(afterSubmit).not.toBeCalled();
+    expect(afterReset).toHaveBeenCalled();
+    expect(afterValidate).not.toHaveBeenCalled();
+    expect(beforeSubmit).not.toHaveBeenCalled();
+    expect(afterSubmit).not.toHaveBeenCalled();
   });
 });
